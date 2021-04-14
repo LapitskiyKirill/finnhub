@@ -17,7 +17,6 @@ public class SecurityConstants {
     ) {
         SECRET = secret;
         EXPIRATION_TIME = expirationTime;
-        System.out.println(EXPIRATION_TIME);
         TOKEN_PREFIX = tokenPrefix;
         HEADER = header;
     }

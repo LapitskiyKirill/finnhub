@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), userDetailsService))
                 .authorizeRequests()
                 .antMatchers("/api/register").permitAll()
-                .antMatchers("/login*").permitAll();
+                .antMatchers("/login").permitAll();
     }
 
     @Override
