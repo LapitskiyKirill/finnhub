@@ -3,6 +3,7 @@ package com.gmail.kirilllapitsky.finnhub.security;
 import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gmail.kirilllapitsky.finnhub.entity.User;
+import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,20 +17,14 @@ import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
-import java.util.HashSet;
 
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 import static com.gmail.kirilllapitsky.finnhub.security.SecurityConstants.*;
 
-
+@AllArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
-
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, UserDetailsService userDetailsService) {
-        this.authenticationManager = authenticationManager;
-        this.userDetailsService = userDetailsService;
-    }
 
     @SneakyThrows
     @Override
@@ -45,7 +40,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                         user.getPassword(),
                         userDetails.getAuthorities())
         );
-
     }
 
     @Override

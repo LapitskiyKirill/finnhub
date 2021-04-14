@@ -3,6 +3,7 @@ package com.gmail.kirilllapitsky.finnhub.security.config;
 import com.gmail.kirilllapitsky.finnhub.security.JwtAuthenticationFilter;
 import com.gmail.kirilllapitsky.finnhub.security.JwtAuthorizationFilter;
 import com.gmail.kirilllapitsky.finnhub.security.service.UserDetailsServiceImpl;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -20,13 +21,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@AllArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsServiceImpl userDetailsService;
-
-    public SecurityConfig(UserDetailsServiceImpl userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -39,7 +37,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), userDetailsService))
                 .authorizeRequests()
                 .antMatchers("/api/register").permitAll()
-                .antMatchers("/login").permitAll();
+                .antMatchers("/login").permitAll()
+                .antMatchers("/api/fetch").permitAll();
     }
 
     @Override

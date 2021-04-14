@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "\"user\"")
@@ -38,6 +39,13 @@ public class User implements UserDetails {
     private boolean isEnabled;
     @Column(name = "role")
     private Role role;
+    @ManyToMany
+    @JoinTable(
+            name = "user_company_tracking",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "company_id")
+    )
+    private List<Company> trackingCompanies;
 
 //List of target companies
 
