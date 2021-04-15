@@ -30,4 +30,9 @@ public class StockData {
     private Double openPrice;
     @Column(name = "previous_close_price")
     private Double previousClosePrice;
+    @Column(name = "daily_min_percentage_change")
+    private Double dailyMinPercentageChange;
+    @Column(name = "daily_max_percentage_change")
+    private Double dailyMaxPercentageChange;
+
 }

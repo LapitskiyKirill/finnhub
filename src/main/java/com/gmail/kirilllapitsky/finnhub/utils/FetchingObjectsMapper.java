@@ -91,4 +91,19 @@ public class FetchingObjectsMapper {
                 .previousClosePrice(parsedStockData.getPreviousClosePrice())
                 .build();
     }
+
+    public static StockData dailyRenewableStockDataMapper(StockData stockData, ParsedStockData parsedStockData) {
+        return StockData
+                .builder()
+                .id(stockData.getId())
+                .company(stockData.getCompany())
+                .currentPrice(parsedStockData.getCurrentPrice())
+                .highPrice(parsedStockData.getHighPrice())
+                .lowPrice(parsedStockData.getLowPrice())
+                .openPrice(parsedStockData.getOpenPrice())
+                .previousClosePrice(parsedStockData.getPreviousClosePrice())
+                .dailyMaxPercentageChange((parsedStockData.getHighPrice() - stockData.getHighPrice()) / stockData.getHighPrice())
+                .dailyMinPercentageChange((parsedStockData.getLowPrice() - stockData.getLowPrice()) / stockData.getLowPrice())
+                .build();
+    }
 }

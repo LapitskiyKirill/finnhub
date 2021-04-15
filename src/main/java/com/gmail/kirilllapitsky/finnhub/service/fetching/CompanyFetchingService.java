@@ -112,13 +112,23 @@ public class CompanyFetchingService implements FetchingService {
                 .forEach(companyMetricsRepository::save);
     }
 
-    @Scheduled(cron = "0 0 0 * * *", zone = "Europe/Moscow")
+    @Scheduled(cron = "0 */10 0 * * *", zone = "Europe/Moscow")
     public void refreshStockData() {
         List<StockData> stockDataList = stockDataRepository.findAll();
 
         stockDataList
                 .stream()
                 .map(stockData -> renewableStockDataMapper(stockData, companyFeignClient.fetchCompanyStockData(stockData.getCompany().getDisplaySymbol())))
+                .forEach(stockDataRepository::save);
+    }
+
+    @Scheduled(cron = "0 0 0 * * *", zone = "Europe/Moscow")
+    public void dailyRefreshStockData() {
+        List<StockData> stockDataList = stockDataRepository.findAll();
+
+        stockDataList
+                .stream()
+                .map(stockData -> dailyRenewableStockDataMapper(stockData, companyFeignClient.fetchCompanyStockData(stockData.getCompany().getDisplaySymbol())))
                 .forEach(stockDataRepository::save);
     }
 }
