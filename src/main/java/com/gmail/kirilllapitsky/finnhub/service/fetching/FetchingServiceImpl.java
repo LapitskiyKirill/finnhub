@@ -23,7 +23,7 @@ import static com.gmail.kirilllapitsky.finnhub.utils.FetchingObjectsMapper.*;
 
 @Service
 @AllArgsConstructor
-public class CompanyFetchingService implements FetchingService {
+public class FetchingServiceImpl implements FetchingService {
     private final CompanyFeignClient companyFeignClient;
     private final CompanyRepository companyRepository;
     private final CompanyMetricsRepository companyMetricsRepository;

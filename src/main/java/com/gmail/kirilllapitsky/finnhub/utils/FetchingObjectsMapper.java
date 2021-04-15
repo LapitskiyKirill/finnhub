@@ -75,7 +75,6 @@ public class FetchingObjectsMapper {
                 .highPrice(parsedStockData.getHighPrice())
                 .lowPrice(parsedStockData.getLowPrice())
                 .openPrice(parsedStockData.getOpenPrice())
-                .previousClosePrice(parsedStockData.getPreviousClosePrice())
                 .build();
     }
 
@@ -88,7 +87,8 @@ public class FetchingObjectsMapper {
                 .highPrice(parsedStockData.getHighPrice())
                 .lowPrice(parsedStockData.getLowPrice())
                 .openPrice(parsedStockData.getOpenPrice())
-                .previousClosePrice(parsedStockData.getPreviousClosePrice())
+                .dailyMaxPercentageChange(stockData.getDailyMaxPercentageChange())
+                .dailyMinPercentageChange(stockData.getDailyMinPercentageChange())
                 .build();
     }
 
@@ -101,7 +101,6 @@ public class FetchingObjectsMapper {
                 .highPrice(parsedStockData.getHighPrice())
                 .lowPrice(parsedStockData.getLowPrice())
                 .openPrice(parsedStockData.getOpenPrice())
-                .previousClosePrice(parsedStockData.getPreviousClosePrice())
                 .dailyMaxPercentageChange((parsedStockData.getHighPrice() - stockData.getHighPrice()) / stockData.getHighPrice())
                 .dailyMinPercentageChange((parsedStockData.getLowPrice() - stockData.getLowPrice()) / stockData.getLowPrice())
                 .build();

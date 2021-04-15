@@ -17,6 +17,4 @@ public class ParsedStockData {
     private Double lowPrice;
     @JsonProperty("o")
     private Double openPrice;
-    @JsonProperty("p")
-    private Double previousClosePrice;
 }

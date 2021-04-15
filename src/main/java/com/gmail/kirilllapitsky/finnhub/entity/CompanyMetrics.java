@@ -37,5 +37,4 @@ public class CompanyMetrics {
     private Double yearLow;
     @Column(name = "\"year_low_date\"")
     private LocalDate yearLowDate;
-
 }
