@@ -57,7 +57,7 @@ create table if not exists stock_data
             primary key,
     current_price double precision,
     open_price double precision,
-    track_tome timestamp,
+    track_time timestamp,
     company_id bigint not null
 );
 
@@ -98,7 +98,8 @@ create table if not exists subscription
         constraint subscription_pk
             primary key,
     start_date timestamp not null,
-    end_date timestamp not null
+    end_date timestamp not null,
+    role integer
 );
 
 alter table subscription owner to postgres;

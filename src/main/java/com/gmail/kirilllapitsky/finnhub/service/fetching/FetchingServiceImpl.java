@@ -4,16 +4,10 @@ import com.gmail.kirilllapitsky.finnhub.dto.ParsedCompany;
 import com.gmail.kirilllapitsky.finnhub.dto.ParsedCompanyInfo;
 import com.gmail.kirilllapitsky.finnhub.dto.ParsedCompanyMetrics;
 import com.gmail.kirilllapitsky.finnhub.dto.ParsedStockData;
-import com.gmail.kirilllapitsky.finnhub.entity.Company;
-import com.gmail.kirilllapitsky.finnhub.entity.CompanyMetrics;
-import com.gmail.kirilllapitsky.finnhub.entity.DailyStockData;
-import com.gmail.kirilllapitsky.finnhub.entity.StockData;
+import com.gmail.kirilllapitsky.finnhub.entity.*;
 import com.gmail.kirilllapitsky.finnhub.exception.NoSuchEntityException;
 import com.gmail.kirilllapitsky.finnhub.feignClient.CompanyFeignClient;
-import com.gmail.kirilllapitsky.finnhub.repository.CompanyMetricsRepository;
-import com.gmail.kirilllapitsky.finnhub.repository.CompanyRepository;
-import com.gmail.kirilllapitsky.finnhub.repository.DailyStockDataRepository;
-import com.gmail.kirilllapitsky.finnhub.repository.StockDataRepository;
+import com.gmail.kirilllapitsky.finnhub.repository.*;
 import com.gmail.kirilllapitsky.finnhub.utils.FetchingObjectsMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -35,6 +29,7 @@ public class FetchingServiceImpl implements FetchingService {
     private final CompanyMetricsRepository companyMetricsRepository;
     private final StockDataRepository stockDataRepository;
     private final DailyStockDataRepository dailyStockDataRepository;
+    private final UserRepository userRepository;
 
     @Override
     public void fetchAllCompanies() {
@@ -190,6 +185,12 @@ public class FetchingServiceImpl implements FetchingService {
                 return;
             }
         }
+    }
+
+    @Scheduled(cron = "0 21 * * * *", zone = "Europe/Moscow")
+    public void refresh() {
+        User user = userRepository.findById(1L).orElseThrow();
+        System.out.println(user.getRole());
     }
 
 }
