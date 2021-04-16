@@ -59,9 +59,7 @@ create table if not exists stock_data
     high_price double precision,
     low_price double precision,
     open_price double precision,
-    previous_close_price double precision,
-    daily_min_percentage_change double precision,
-    daily_max_percentage_change double precision
+    company_id bigint
 );
 
 alter table stock_data owner to postgres;
@@ -94,4 +92,18 @@ create table if not exists company_metrics
 );
 
 alter table company_metrics owner to postgres;
+
+create table if not exists subscription
+(
+    id bigint not null
+        constraint subscription_pk
+            primary key,
+    start_date timestamp not null,
+    end_date timestamp not null
+);
+
+alter table subscription owner to postgres;
+
+create unique index if not exists subscription_id_uindex
+    on subscription (id);
 
