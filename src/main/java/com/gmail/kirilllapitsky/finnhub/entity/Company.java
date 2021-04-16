@@ -44,4 +44,8 @@ public class Company {
     private String description;
     @ManyToMany(mappedBy = "trackingCompanies")
     private Set<User> trackingUsers = new HashSet<>();
+    @OneToMany(mappedBy = "company")
+    private Set<StockData> companyStockData = new HashSet<>();
+    @OneToMany(mappedBy = "company")
+    private Set<DailyStockData> dailyStockData = new HashSet<>();
 }

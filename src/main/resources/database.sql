@@ -56,10 +56,9 @@ create table if not exists stock_data
         constraint stock_data_pkey
             primary key,
     current_price double precision,
-    high_price double precision,
-    low_price double precision,
     open_price double precision,
-    company_id bigint
+    track_tome timestamp,
+    company_id bigint not null
 );
 
 alter table stock_data owner to postgres;
@@ -106,4 +105,22 @@ alter table subscription owner to postgres;
 
 create unique index if not exists subscription_id_uindex
     on subscription (id);
+
+create table if not exists daily_stock_data
+(
+    id bigserial not null
+        constraint daily_stock_data_pk
+            primary key,
+    high_price double precision,
+    low_price double precision,
+    company_id bigint not null
+        constraint daily_stock_data_company_id_fk
+            references company,
+    track_time timestamp not null
+);
+
+alter table daily_stock_data owner to postgres;
+
+create unique index if not exists daily_stock_data_id_uindex
+    on daily_stock_data (id);
 

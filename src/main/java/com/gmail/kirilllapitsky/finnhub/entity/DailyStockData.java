@@ -9,12 +9,12 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "\"stock_data\"")
+@Table(name = "\"daily_stock_data\"")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class StockData {
+public class DailyStockData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -22,10 +22,10 @@ public class StockData {
     @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
-    @Column(name = "current_price")
-    private Double currentPrice;
-    @Column(name = "open_price")
-    private Double openPrice;
+    @Column(name = "high_price")
+    private Double highPrice;
+    @Column(name = "low_price")
+    private Double lowPrice;
     @Column(name = "track_time")
     private LocalDateTime trackTime;
 }

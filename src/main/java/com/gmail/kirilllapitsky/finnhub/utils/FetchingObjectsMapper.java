@@ -3,7 +3,10 @@ package com.gmail.kirilllapitsky.finnhub.utils;
 import com.gmail.kirilllapitsky.finnhub.dto.*;
 import com.gmail.kirilllapitsky.finnhub.entity.Company;
 import com.gmail.kirilllapitsky.finnhub.entity.CompanyMetrics;
+import com.gmail.kirilllapitsky.finnhub.entity.DailyStockData;
 import com.gmail.kirilllapitsky.finnhub.entity.StockData;
+
+import java.time.LocalDateTime;
 
 public class FetchingObjectsMapper {
 
@@ -17,21 +20,15 @@ public class FetchingObjectsMapper {
     }
 
     public static Company companyInfoMapper(Company company, ParsedCompanyInfo parsedCompanyInfo) {
-        return Company.
-                builder()
-                .id(company.getId())
-                .currency(company.getCurrency())
-                .description(company.getDescription())
-                .displaySymbol(company.getDisplaySymbol())
-                .country(parsedCompanyInfo.getCountry())
-                .exchange(parsedCompanyInfo.getExchange())
-                .finnhubIndustry(parsedCompanyInfo.getExchange())
-                .ipo(parsedCompanyInfo.getIpo())
-                .logo(parsedCompanyInfo.getLogo())
-                .name(parsedCompanyInfo.getName())
-                .ticker(parsedCompanyInfo.getTicker())
-                .webUrl(parsedCompanyInfo.getWeburl())
-                .build();
+        company.setCountry(parsedCompanyInfo.getCountry());
+        company.setExchange(parsedCompanyInfo.getExchange());
+        company.setFinnhubIndustry(parsedCompanyInfo.getFinnhubIndustry());
+        company.setIpo(parsedCompanyInfo.getIpo());
+        company.setLogo(parsedCompanyInfo.getLogo());
+        company.setName(parsedCompanyInfo.getName());
+        company.setTicker(parsedCompanyInfo.getTicker());
+        company.setWebUrl(parsedCompanyInfo.getWeburl());
+        return company;
     }
 
     public static CompanyMetrics companyMetricsMapper(Company company, ParsedCompanyMetrics parsedCompanyMetrics) {
@@ -50,21 +47,18 @@ public class FetchingObjectsMapper {
                 .build();
     }
 
-    public static CompanyMetrics companyRenewableMetricsMapper(CompanyMetrics companyMetrics, ParsedCompanyMetrics parsedCompanyMetrics) {
+    public static CompanyMetrics renewableCompanyMetricsMapper(CompanyMetrics companyMetrics, ParsedCompanyMetrics parsedCompanyMetrics) {
         ParsedMetrics parsedMetrics = parsedCompanyMetrics.getParsedMetrics();
-        return CompanyMetrics
-                .builder()
-                .id(companyMetrics.getId())
-                .company(companyMetrics.getCompany())
-                .yearDailyReturn(parsedMetrics.getYearDailyReturn())
-                .halfYearDailyReturn(parsedMetrics.getHalfYearDailyReturn())
-                .quarterYearDailyReturn(parsedMetrics.getQuarterYearDailyReturn())
-                .tenDayAverageTradingVolume(parsedMetrics.getTenDayAverageTradingVolume())
-                .yearHigh(parsedMetrics.getYearHigh())
-                .yearHighDate(parsedMetrics.getYearHighDate())
-                .yearLow(parsedMetrics.getYearLow())
-                .yearLowDate(parsedMetrics.getYearLowDate())
-                .build();
+        companyMetrics.setYearDailyReturn(parsedMetrics.getYearDailyReturn());
+        companyMetrics.setHalfYearDailyReturn(parsedMetrics.getHalfYearDailyReturn());
+        companyMetrics.setQuarterYearDailyReturn(parsedMetrics.getQuarterYearDailyReturn());
+        companyMetrics.setTenDayAverageTradingVolume(parsedMetrics.getTenDayAverageTradingVolume());
+        companyMetrics.setYearHigh(parsedMetrics.getYearHigh());
+        companyMetrics.setYearHighDate(parsedMetrics.getYearHighDate());
+        companyMetrics.setYearLow(parsedMetrics.getYearLow());
+        companyMetrics.setYearLowDate(parsedMetrics.getYearLowDate());
+        return companyMetrics;
+
     }
 
     public static StockData stockDataMapper(Company company, ParsedStockData parsedStockData) {
@@ -72,37 +66,18 @@ public class FetchingObjectsMapper {
                 .builder()
                 .company(company)
                 .currentPrice(parsedStockData.getCurrentPrice())
-                .highPrice(parsedStockData.getHighPrice())
-                .lowPrice(parsedStockData.getLowPrice())
                 .openPrice(parsedStockData.getOpenPrice())
+                .trackTime(LocalDateTime.now())
                 .build();
     }
 
-    public static StockData renewableStockDataMapper(StockData stockData, ParsedStockData parsedStockData) {
-        return StockData
+    public static DailyStockData dailyStockDataMapper(Company company, ParsedStockData parsedStockData) {
+        return DailyStockData
                 .builder()
-                .id(stockData.getId())
-                .company(stockData.getCompany())
-                .currentPrice(parsedStockData.getCurrentPrice())
-                .highPrice(stockData.getHighPrice())
-                .lowPrice(stockData.getLowPrice())
-                .openPrice(parsedStockData.getOpenPrice())
-                .dailyMaxPercentageChange(stockData.getDailyMaxPercentageChange())
-                .dailyMinPercentageChange(stockData.getDailyMinPercentageChange())
-                .build();
-    }
-
-    public static StockData dailyRenewableStockDataMapper(StockData stockData, ParsedStockData parsedStockData) {
-        return StockData
-                .builder()
-                .id(stockData.getId())
-                .company(stockData.getCompany())
-                .currentPrice(parsedStockData.getCurrentPrice())
+                .company(company)
                 .highPrice(parsedStockData.getHighPrice())
                 .lowPrice(parsedStockData.getLowPrice())
-                .openPrice(parsedStockData.getOpenPrice())
-                .dailyMaxPercentageChange((parsedStockData.getHighPrice() - stockData.getHighPrice()) / stockData.getHighPrice())
-                .dailyMinPercentageChange((parsedStockData.getLowPrice() - stockData.getLowPrice()) / stockData.getLowPrice())
+                .trackTime(LocalDateTime.now())
                 .build();
     }
 }
