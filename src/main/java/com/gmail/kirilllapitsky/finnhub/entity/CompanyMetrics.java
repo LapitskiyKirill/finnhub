@@ -16,10 +16,11 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class CompanyMetrics {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
     @OneToOne
-    @MapsId
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "company_id")
     private Company company;
     @Column(name = "\"year_daily_return\"")
     private Double yearDailyReturn;
@@ -27,7 +28,7 @@ public class CompanyMetrics {
     private Double halfYearDailyReturn;
     @Column(name = "\"quarter_year_daily_return\"")
     private Double quarterYearDailyReturn;
-    @Column(name = "\"10_day_average_trading_volume\"")
+    @Column(name = "\"ten_day_average_trading_volume\"")
     private Double tenDayAverageTradingVolume;
     @Column(name = "\"year_high\"")
     private Double yearHigh;

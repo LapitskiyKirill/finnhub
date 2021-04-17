@@ -6,11 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
-@Table(name = "\"Company\"")
+@Table(name = "company")
 @Data
 @Builder
 @AllArgsConstructor
@@ -42,6 +40,4 @@ public class Company {
     private String displaySymbol;
     @Column(name = "description")
     private String description;
-    @ManyToMany(mappedBy = "trackingCompanies")
-    private Set<User> trackingUsers = new HashSet<>();
 }
