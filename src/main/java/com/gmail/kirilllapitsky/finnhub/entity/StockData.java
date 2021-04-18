@@ -28,4 +28,9 @@ public class StockData {
     private Double openPrice;
     @Column(name = "track_time")
     private LocalDateTime trackTime;
+
+    @PrePersist
+    public void onPrePersist() {
+        trackTime = LocalDateTime.now();
+    }
 }

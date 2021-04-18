@@ -28,4 +28,9 @@ public class DailyStockData {
     private Double lowPrice;
     @Column(name = "track_time")
     private LocalDateTime trackTime;
+
+    @PrePersist
+    public void onPrePersist() {
+        trackTime = LocalDateTime.now();
+    }
 }

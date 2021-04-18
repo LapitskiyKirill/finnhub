@@ -21,9 +21,12 @@ public class Subscription {
     private Long id;
     @OneToOne
     @MapsId
+    @JoinColumn(name = "id")
     private User user;
     @Column(name = "start_date")
     private LocalDateTime startDate;
     @Column(name = "end_date")
     private LocalDateTime endDate;
+    @Column(name = "role")
+    private Role role;
 }
