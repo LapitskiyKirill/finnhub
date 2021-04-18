@@ -4,6 +4,7 @@ import com.gmail.kirilllapitsky.finnhub.TestData;
 import com.gmail.kirilllapitsky.finnhub.dto.RegisterRequest;
 import com.gmail.kirilllapitsky.finnhub.entity.Subscription;
 import com.gmail.kirilllapitsky.finnhub.entity.User;
+import com.gmail.kirilllapitsky.finnhub.exception.ApiException;
 import com.gmail.kirilllapitsky.finnhub.repository.SubscriptionRepository;
 import com.gmail.kirilllapitsky.finnhub.repository.UserRepository;
 import com.gmail.kirilllapitsky.finnhub.service.RegisterService;
@@ -16,13 +17,14 @@ import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;
+
+import static org.junit.Assert.assertThrows;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -55,7 +57,7 @@ public class RegisterServiceTest {
     }
 
     @Test
-    public void shouldRegister() throws Exception {
+    public void shouldRegister() throws ApiException {
         Mockito.when(userRepository.findByUsername(registerRequest.getUsername())).thenReturn(Optional.empty());
         Mockito.when(userRepository.findByEmail(registerRequest.getEmail())).thenReturn(Optional.empty());
         Mockito.when(passwordEncoder.encode(registerRequest.getPassword())).thenReturn(registerRequest.getPassword());
@@ -66,7 +68,11 @@ public class RegisterServiceTest {
     }
 
     @Test
-    public void shouldNotRegisterWhenUsernameOrEmailExists() {
+    public void shouldNotRegisterWhenUsernameOrEmailExists() throws ApiException {
+        Mockito.when(userRepository.findByUsername(registerRequest.getUsername())).thenReturn(Optional.empty());
+        Mockito.when(userRepository.findByEmail(registerRequest.getEmail())).thenReturn(Optional.of(user));
+        Mockito.when(passwordEncoder.encode(registerRequest.getPassword())).thenReturn(registerRequest.getPassword());
 
+        assertThrows("User with this email already exists.", ApiException.class, () -> registerService.signUp(registerRequest));
     }
 }
