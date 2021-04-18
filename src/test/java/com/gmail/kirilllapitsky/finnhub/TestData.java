@@ -4,13 +4,9 @@ import com.gmail.kirilllapitsky.finnhub.dto.*;
 import com.gmail.kirilllapitsky.finnhub.entity.*;
 import com.gmail.kirilllapitsky.finnhub.security.enumerable.Role;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class TestData {
     public static Company getCompany() {
@@ -82,9 +78,7 @@ public class TestData {
     public static Subscription getSubscription() {
         return Subscription
                 .builder()
-                .startDate(LocalDateTime.now())
                 .role(Role.BEGINNER)
-                .endDate(LocalDateTime.now().plusDays(20))
                 .build();
     }
 
@@ -139,6 +133,27 @@ public class TestData {
                 .builder()
                 .highPrice(dailyStockData.getHighPrice())
                 .lowPrice(dailyStockData.getLowPrice())
+                .build();
+    }
+
+    public static RegisterRequest getRegisterRequest() {
+        return RegisterRequest
+                .builder()
+                .email("e@mail.com")
+                .password("password")
+                .username("username")
+                .build();
+    }
+
+    public static User getUserByRegisterRequest(RegisterRequest registerRequest) {
+        return User.builder()
+                .password(registerRequest.getPassword())
+                .username(registerRequest.getUsername())
+                .email(registerRequest.getEmail())
+                .isAccountNonExpired(true)
+                .isAccountNonLocked(true)
+                .isCredentialsNonExpired(true)
+                .isEnabled(true)
                 .build();
     }
 }

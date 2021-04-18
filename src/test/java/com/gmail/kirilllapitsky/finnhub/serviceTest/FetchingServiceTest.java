@@ -42,7 +42,7 @@ import java.util.List;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class FetchingServiceTest {
     @InjectMocks
-    public FetchingServiceImpl fetchingService;
+    private FetchingServiceImpl fetchingService;
 
     @Spy
     private CompanyFeignClient companyFeignClient;

@@ -29,4 +29,10 @@ public class Subscription {
     private LocalDateTime endDate;
     @Column(name = "role")
     private Role role;
+
+    @PrePersist
+    public void onPrePersist() {
+        startDate = LocalDateTime.now();
+    }
+
 }
