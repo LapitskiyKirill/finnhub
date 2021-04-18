@@ -1,13 +1,15 @@
 package com.gmail.kirilllapitsky.finnhub.service.fetching;
 
 import com.gmail.kirilllapitsky.finnhub.dto.ParsedCompany;
-import com.gmail.kirilllapitsky.finnhub.dto.ParsedCompanyInfo;
-import com.gmail.kirilllapitsky.finnhub.dto.ParsedCompanyMetrics;
-import com.gmail.kirilllapitsky.finnhub.dto.ParsedStockData;
-import com.gmail.kirilllapitsky.finnhub.entity.*;
-import com.gmail.kirilllapitsky.finnhub.exception.NoSuchEntityException;
+import com.gmail.kirilllapitsky.finnhub.entity.Company;
+import com.gmail.kirilllapitsky.finnhub.entity.CompanyMetrics;
+import com.gmail.kirilllapitsky.finnhub.entity.DailyStockData;
+import com.gmail.kirilllapitsky.finnhub.entity.StockData;
 import com.gmail.kirilllapitsky.finnhub.feignClient.CompanyFeignClient;
-import com.gmail.kirilllapitsky.finnhub.repository.*;
+import com.gmail.kirilllapitsky.finnhub.repository.CompanyMetricsRepository;
+import com.gmail.kirilllapitsky.finnhub.repository.CompanyRepository;
+import com.gmail.kirilllapitsky.finnhub.repository.DailyStockDataRepository;
+import com.gmail.kirilllapitsky.finnhub.repository.StockDataRepository;
 import com.gmail.kirilllapitsky.finnhub.utils.FetchingObjectsMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,12 +31,10 @@ public class FetchingServiceImpl implements FetchingService {
     private final CompanyMetricsRepository companyMetricsRepository;
     private final StockDataRepository stockDataRepository;
     private final DailyStockDataRepository dailyStockDataRepository;
-    private final UserRepository userRepository;
 
     @Override
     public void fetchAllCompanies() {
         List<ParsedCompany> parsedCompanies = companyFeignClient.fetchAllCompanies();
-
         List<Company> companies = parsedCompanies
                 .stream()
                 .map(FetchingObjectsMapper::companyMapper)
@@ -44,73 +44,48 @@ public class FetchingServiceImpl implements FetchingService {
     }
 
     @Override
-    public void fetchAllCompaniesInfo() {
-        List<Company> companies = companyRepository.findAll();
-
-        List<Company> updatedCompanies = companies
-                .stream()
-                .map(company -> companyInfoMapper(
-                        company,
-                        companyFeignClient.fetchCompanyInfo(company.getDisplaySymbol()))
-                )
-                .collect(Collectors.toList());
-        companyRepository.saveAll(updatedCompanies);
-
+    public void refreshAllCompaniesInfo() {
+        int page = 0;
+        int pageSize = 100;
+        Pageable pageable;
+        while (true) {
+            pageable = PageRequest.of(page, pageSize);
+            Page<Company> resultPage = companyRepository.findAll(pageable);
+            if (!resultPage.isEmpty()) {
+                List<Company> updatedCompanies = resultPage.getContent()
+                        .stream()
+                        .map(company -> companyInfoMapper(
+                                company,
+                                companyFeignClient.fetchCompanyInfo(company.getDisplaySymbol()))
+                        )
+                        .collect(Collectors.toList());
+                companyRepository.saveAll(updatedCompanies);
+                page++;
+            } else {
+                return;
+            }
+        }
     }
 
     @Override
     public void fetchAllCompaniesMetrics() {
-        List<Company> companies = companyRepository.findAll();
-
-        List<CompanyMetrics> companyMetrics = companies
-                .stream()
-                .map(company -> companyMetricsMapper(company, companyFeignClient.fetchCompanyMetrics(company.getDisplaySymbol())))
-                .collect(Collectors.toList());
-        companyMetricsRepository.saveAll(companyMetrics);
-    }
-
-    @Override
-    public void fetchAllCompaniesStockData() {
-        List<Company> companies = companyRepository.findAll();
-
-        List<StockData> stockDataList = companies
-                .stream()
-                .map(company -> stockDataMapper(company, companyFeignClient.fetchCompanyStockData(company.getDisplaySymbol())))
-                .collect(Collectors.toList());
-        stockDataRepository.saveAll(stockDataList);
-    }
-
-    @Override
-    public void fetchCompanyMetrics(String displaySymbol) throws NoSuchEntityException {
-        Company company = companyRepository.findByDisplaySymbol(displaySymbol)
-                .orElseThrow(() -> new NoSuchEntityException("No company with such display symbol found."));
-
-        ParsedCompanyMetrics parsedCompanyMetrics = companyFeignClient.fetchCompanyMetrics(displaySymbol);
-
-        CompanyMetrics companyMetrics = companyMetricsMapper(company, parsedCompanyMetrics);
-        companyMetricsRepository.save(companyMetrics);
-    }
-
-    @Override
-    public void fetchCompanyStockData(String displaySymbol) throws NoSuchEntityException {
-        Company company = companyRepository.findByDisplaySymbol(displaySymbol)
-                .orElseThrow(() -> new NoSuchEntityException("No company with such display symbol found."));
-
-        ParsedStockData parsedStockData = companyFeignClient.fetchCompanyStockData(displaySymbol);
-
-        StockData stockData = stockDataMapper(company, parsedStockData);
-        stockDataRepository.save(stockData);
-    }
-
-    @Override
-    public void fetchCompanyInfo(String displaySymbol) throws NoSuchEntityException {
-        Company company = companyRepository.findByDisplaySymbol(displaySymbol)
-                .orElseThrow(() -> new NoSuchEntityException("No company with such display symbol found."));
-
-        ParsedCompanyInfo parsedCompanyInfo = companyFeignClient.fetchCompanyInfo(displaySymbol);
-
-        companyInfoMapper(company, parsedCompanyInfo);
-        companyRepository.save(company);
+        int page = 0;
+        int pageSize = 100;
+        Pageable pageable;
+        while (true) {
+            pageable = PageRequest.of(page, pageSize);
+            Page<Company> resultPage = companyRepository.findAll(pageable);
+            if (!resultPage.isEmpty()) {
+                List<CompanyMetrics> companyMetricsList = resultPage.getContent()
+                        .stream()
+                        .map(company -> companyMetricsMapper(company, companyFeignClient.fetchCompanyMetrics(company.getDisplaySymbol())))
+                        .collect(Collectors.toList());
+                companyMetricsRepository.saveAll(companyMetricsList);
+                page++;
+            } else {
+                return;
+            }
+        }
     }
 
     @Scheduled(cron = "0 0 0 * * 0", zone = "Europe/Moscow")
@@ -122,7 +97,7 @@ public class FetchingServiceImpl implements FetchingService {
             pageable = PageRequest.of(page, pageSize);
             Page<CompanyMetrics> resultPage = companyMetricsRepository.findAll(pageable);
             if (!resultPage.isEmpty()) {
-                List<CompanyMetrics> companiesMetrics = resultPage.getContent()
+                List<CompanyMetrics> companyMetricsList = resultPage.getContent()
                         .stream()
                         .map(companyMetrics -> renewableCompanyMetricsMapper(
                                 companyMetrics,
@@ -130,7 +105,7 @@ public class FetchingServiceImpl implements FetchingService {
                                 )
                         )
                         .collect(Collectors.toList());
-                companyMetricsRepository.saveAll(companiesMetrics);
+                companyMetricsRepository.saveAll(companyMetricsList);
                 page++;
             } else {
                 return;
@@ -138,9 +113,8 @@ public class FetchingServiceImpl implements FetchingService {
         }
     }
 
-
-    @Scheduled(cron = "0 */30 * * * *", zone = "Europe/Moscow")
-    public void refreshStockData() {
+    @Scheduled(cron = "0 */10 * * * *", zone = "Europe/Moscow")
+    public void fetchStockData() {
         int page = 0;
         int pageSize = 100;
         Pageable pageable;
@@ -148,14 +122,15 @@ public class FetchingServiceImpl implements FetchingService {
             pageable = PageRequest.of(page, pageSize);
             Page<Company> resultPage = companyRepository.findAll(pageable);
             if (!resultPage.isEmpty()) {
-                List<StockData> companies = resultPage.getContent()
+                List<StockData> stockDataList = resultPage.getContent()
                         .stream()
-                        .map(company -> stockDataMapper(company,
-                                companyFeignClient.fetchCompanyStockData(company.getDisplaySymbol())
+                        .map(company ->
+                                stockDataMapper(company,
+                                        companyFeignClient.fetchCompanyStockData(company.getDisplaySymbol())
                                 )
                         )
                         .collect(Collectors.toList());
-                stockDataRepository.saveAll(companies);
+                stockDataRepository.saveAll(stockDataList);
                 page++;
             } else {
                 return;
@@ -164,7 +139,7 @@ public class FetchingServiceImpl implements FetchingService {
     }
 
     @Scheduled(cron = "0 0 0 * * *", zone = "Europe/Moscow")
-    public void dailyRefreshStockData() {
+    public void fetchDailyStockData() {
         int page = 0;
         int pageSize = 100;
         Pageable pageable;
@@ -172,25 +147,18 @@ public class FetchingServiceImpl implements FetchingService {
             pageable = PageRequest.of(page, pageSize);
             Page<Company> resultPage = companyRepository.findAll(pageable);
             if (!resultPage.isEmpty()) {
-                List<DailyStockData> companies = resultPage.getContent()
+                List<DailyStockData> dailyStockDataList = resultPage.getContent()
                         .stream()
                         .map(company -> dailyStockDataMapper(company,
                                 companyFeignClient.fetchCompanyStockData(company.getDisplaySymbol())
                                 )
                         )
                         .collect(Collectors.toList());
-                dailyStockDataRepository.saveAll(companies);
+                dailyStockDataRepository.saveAll(dailyStockDataList);
                 page++;
             } else {
                 return;
             }
         }
     }
-
-    @Scheduled(cron = "0 21 * * * *", zone = "Europe/Moscow")
-    public void refresh() {
-        User user = userRepository.findById(1L).orElseThrow();
-        System.out.println(user.getRole());
-    }
-
 }

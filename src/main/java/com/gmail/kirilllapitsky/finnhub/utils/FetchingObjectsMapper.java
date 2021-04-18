@@ -67,7 +67,6 @@ public class FetchingObjectsMapper {
                 .company(company)
                 .currentPrice(parsedStockData.getCurrentPrice())
                 .openPrice(parsedStockData.getOpenPrice())
-                .trackTime(LocalDateTime.now())
                 .build();
     }
 
@@ -77,7 +76,6 @@ public class FetchingObjectsMapper {
                 .company(company)
                 .highPrice(parsedStockData.getHighPrice())
                 .lowPrice(parsedStockData.getLowPrice())
-                .trackTime(LocalDateTime.now())
                 .build();
     }
 }
