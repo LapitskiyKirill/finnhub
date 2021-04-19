@@ -1,6 +1,6 @@
 package com.gmail.kirilllapitsky.finnhub.service.fetching;
 
-import com.gmail.kirilllapitsky.finnhub.dto.ParsedCompany;
+import com.gmail.kirilllapitsky.finnhub.dto.FinnhubCompany;
 import com.gmail.kirilllapitsky.finnhub.entity.Company;
 import com.gmail.kirilllapitsky.finnhub.entity.CompanyMetrics;
 import com.gmail.kirilllapitsky.finnhub.entity.DailyStockData;
@@ -34,7 +34,7 @@ public class FetchingServiceImpl implements FetchingService {
 
     @Override
     public void fetchAllCompanies() {
-        List<ParsedCompany> parsedCompanies = companyFeignClient.fetchAllCompanies();
+        List<FinnhubCompany> parsedCompanies = companyFeignClient.fetchAllCompanies();
         List<Company> companies = parsedCompanies
                 .stream()
                 .map(FetchingObjectsMapper::companyMapper)

@@ -3,7 +3,8 @@ package com.gmail.kirilllapitsky.finnhub.controller;
 import com.gmail.kirilllapitsky.finnhub.dto.RegisterRequest;
 import com.gmail.kirilllapitsky.finnhub.exception.ApiException;
 import com.gmail.kirilllapitsky.finnhub.service.RegisterService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +14,7 @@ import javax.transaction.Transactional;
 
 @RestController
 @RequestMapping("/api/register")
-@AllArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class RegisterController {
     private final RegisterService registerService;
 

@@ -13,12 +13,12 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
-@Table(name = "\"user\"")
 @Data
+@Entity
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "\"user\"")
 @SecondaryTable(name = "subscription", pkJoinColumns = @PrimaryKeyJoinColumn(name = "id", referencedColumnName = "id"))
 public class User implements UserDetails {
     @Id

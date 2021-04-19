@@ -23,9 +23,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(RegisterController.class)
 @RunWith(SpringRunner.class)
 @ActiveProfiles("test-controller")
+@WebMvcTest(RegisterController.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class RegisterControllerTest {
     @Autowired

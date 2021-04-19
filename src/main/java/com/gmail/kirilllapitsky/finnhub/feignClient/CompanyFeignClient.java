@@ -1,9 +1,9 @@
 package com.gmail.kirilllapitsky.finnhub.feignClient;
 
-import com.gmail.kirilllapitsky.finnhub.dto.ParsedCompany;
-import com.gmail.kirilllapitsky.finnhub.dto.ParsedCompanyInfo;
-import com.gmail.kirilllapitsky.finnhub.dto.ParsedCompanyMetrics;
-import com.gmail.kirilllapitsky.finnhub.dto.ParsedStockData;
+import com.gmail.kirilllapitsky.finnhub.dto.FinnhubCompany;
+import com.gmail.kirilllapitsky.finnhub.dto.FinnhubCompanyInfo;
+import com.gmail.kirilllapitsky.finnhub.dto.FinnhubCompanyMetrics;
+import com.gmail.kirilllapitsky.finnhub.dto.FinnhubStockData;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,14 +14,14 @@ import java.util.List;
 public interface CompanyFeignClient {
 
     @GetMapping(value = "api/v1/stock/symbol?exchange=US&token=${finnhub.token}")
-    List<ParsedCompany> fetchAllCompanies();
+    List<FinnhubCompany> fetchAllCompanies();
 
     @GetMapping(value = "api/v1/stock/profile2?symbol={displaySymbol}&token=${finnhub.token}")
-    ParsedCompanyInfo fetchCompanyInfo(@PathVariable("displaySymbol") String displaySymbol);
+    FinnhubCompanyInfo fetchCompanyInfo(@PathVariable("displaySymbol") String displaySymbol);
 
     @GetMapping(value = "api/v1/stock/metric?symbol={displaySymbol}&metric=all&token=${finnhub.token}")
-    ParsedCompanyMetrics fetchCompanyMetrics(@PathVariable("displaySymbol") String displaySymbol);
+    FinnhubCompanyMetrics fetchCompanyMetrics(@PathVariable("displaySymbol") String displaySymbol);
 
     @GetMapping(value = "api/v1/quote?symbol={displaySymbol}&token=${finnhub.token}")
-    ParsedStockData fetchCompanyStockData(@PathVariable("displaySymbol") String displaySymbol);
+    FinnhubStockData fetchCompanyStockData(@PathVariable("displaySymbol") String displaySymbol);
 }

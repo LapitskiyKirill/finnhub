@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "\"subscription\"")
 @Data
+@Entity
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "subscription")
 public class Subscription {
     @Id
     @Column(name = "id")

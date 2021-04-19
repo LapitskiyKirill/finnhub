@@ -15,8 +15,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import static org.junit.Assert.assertEquals;
 
 @SpringBootTest
-@RunWith(SpringRunner.class)
 @ActiveProfiles("test")
+@RunWith(SpringRunner.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class StockDataRepositoryTest {
     @Autowired

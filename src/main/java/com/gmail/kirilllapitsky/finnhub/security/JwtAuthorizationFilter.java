@@ -13,7 +13,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashSet;
 
 import static com.auth0.jwt.JWT.require;
 import static com.gmail.kirilllapitsky.finnhub.security.SecurityConstants.*;

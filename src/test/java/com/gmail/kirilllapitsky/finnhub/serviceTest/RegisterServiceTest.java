@@ -27,8 +27,8 @@ import java.util.Optional;
 import static org.junit.Assert.assertThrows;
 
 @SpringBootTest
-@RunWith(SpringRunner.class)
 @ActiveProfiles("test")
+@RunWith(SpringRunner.class)
 @ExtendWith(MockitoExtension.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class RegisterServiceTest {

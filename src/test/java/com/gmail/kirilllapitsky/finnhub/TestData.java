@@ -40,11 +40,11 @@ public class TestData {
                 .build();
     }
 
-    public static ParsedCompanyMetrics getParsedCompanyMetrics(CompanyMetrics companyMetrics) {
-        return ParsedCompanyMetrics
+    public static FinnhubCompanyMetrics getFinnhubCompanyMetrics(CompanyMetrics companyMetrics) {
+        return FinnhubCompanyMetrics
                 .builder()
-                .parsedMetrics(
-                        ParsedMetrics
+                .finnhubMetrics(
+                        FinnhubMetrics
                                 .builder()
                                 .yearLow(companyMetrics.getYearLow())
                                 .yearHigh(companyMetrics.getYearHigh())
@@ -91,14 +91,14 @@ public class TestData {
                 .build();
     }
 
-    public static List<ParsedCompany> getParsedCompanies() {
-        List<ParsedCompany> parsedCompanies = new ArrayList<>();
-        parsedCompanies.add(getParsedCompany());
+    public static List<FinnhubCompany> getFinnhubCompanies() {
+        List<FinnhubCompany> parsedCompanies = new ArrayList<>();
+        parsedCompanies.add(getFinnhubCompany());
         return parsedCompanies;
     }
 
-    public static ParsedCompany getParsedCompany() {
-        return ParsedCompany
+    public static FinnhubCompany getFinnhubCompany() {
+        return FinnhubCompany
                 .builder()
                 .currency("str")
                 .description("str")
@@ -106,8 +106,8 @@ public class TestData {
                 .build();
     }
 
-    public static ParsedCompanyInfo getParsedCompanyInfoByCompany(Company company) {
-        return ParsedCompanyInfo
+    public static FinnhubCompanyInfo getFinnhubCompanyInfoByCompany(Company company) {
+        return FinnhubCompanyInfo
                 .builder()
                 .country(company.getCountry())
                 .exchange(company.getExchange())
@@ -120,16 +120,16 @@ public class TestData {
                 .build();
     }
 
-    public static ParsedStockData getParsedStockData(StockData stockData) {
-        return ParsedStockData
+    public static FinnhubStockData getFinnhubStockData(StockData stockData) {
+        return FinnhubStockData
                 .builder()
                 .currentPrice(stockData.getCurrentPrice())
                 .openPrice(stockData.getOpenPrice())
                 .build();
     }
 
-    public static ParsedStockData getParsedStockData(DailyStockData dailyStockData) {
-        return ParsedStockData
+    public static FinnhubStockData getFinnhubStockData(DailyStockData dailyStockData) {
+        return FinnhubStockData
                 .builder()
                 .highPrice(dailyStockData.getHighPrice())
                 .lowPrice(dailyStockData.getLowPrice())

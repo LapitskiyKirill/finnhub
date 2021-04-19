@@ -9,11 +9,11 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "\"daily_stock_data\"")
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "daily_stock_data")
 public class DailyStockData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,10 +1,10 @@
 package com.gmail.kirilllapitsky.finnhub.serviceTest;
 
 import com.gmail.kirilllapitsky.finnhub.TestData;
-import com.gmail.kirilllapitsky.finnhub.dto.ParsedCompany;
-import com.gmail.kirilllapitsky.finnhub.dto.ParsedCompanyInfo;
-import com.gmail.kirilllapitsky.finnhub.dto.ParsedCompanyMetrics;
-import com.gmail.kirilllapitsky.finnhub.dto.ParsedStockData;
+import com.gmail.kirilllapitsky.finnhub.dto.FinnhubCompany;
+import com.gmail.kirilllapitsky.finnhub.dto.FinnhubCompanyInfo;
+import com.gmail.kirilllapitsky.finnhub.dto.FinnhubCompanyMetrics;
+import com.gmail.kirilllapitsky.finnhub.dto.FinnhubStockData;
 import com.gmail.kirilllapitsky.finnhub.entity.Company;
 import com.gmail.kirilllapitsky.finnhub.entity.CompanyMetrics;
 import com.gmail.kirilllapitsky.finnhub.entity.DailyStockData;
@@ -36,8 +36,8 @@ import java.util.Collections;
 import java.util.List;
 
 @SpringBootTest
-@RunWith(SpringRunner.class)
 @ActiveProfiles("test")
+@RunWith(SpringRunner.class)
 @ExtendWith(MockitoExtension.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class FetchingServiceTest {
@@ -75,14 +75,14 @@ public class FetchingServiceTest {
 
     @Test
     public void shouldGetAllCompanies() {
-        ParsedCompany parsedCompany = TestData.getParsedCompany();
-        List<ParsedCompany> parsedCompanies = new ArrayList<>();
-        parsedCompanies.add(parsedCompany);
+        FinnhubCompany finnhubCompany = TestData.getFinnhubCompany();
+        List<FinnhubCompany> parsedCompanies = new ArrayList<>();
+        parsedCompanies.add(finnhubCompany);
         companiesShouldBeReturnedForSaving.add(Company
                 .builder()
-                .description(parsedCompany.getDescription())
-                .displaySymbol(parsedCompany.getDisplaySymbol())
-                .currency(parsedCompany.getCurrency())
+                .description(finnhubCompany.getDescription())
+                .displaySymbol(finnhubCompany.getDisplaySymbol())
+                .currency(finnhubCompany.getCurrency())
                 .build());
 
         Mockito.when(companyFeignClient.fetchAllCompanies()).thenReturn(parsedCompanies);
@@ -93,11 +93,11 @@ public class FetchingServiceTest {
 
     @Test
     public void shouldRefreshAllCompaniesInfo() {
-        ParsedCompanyInfo parsedCompanyInfo = TestData.getParsedCompanyInfoByCompany(TestData.getCompany());
+        FinnhubCompanyInfo finnhubCompanyInfo = TestData.getFinnhubCompanyInfoByCompany(TestData.getCompany());
 
         Mockito.when(companyRepository.findAll(PageRequest.of(0, 100))).thenReturn(resultPage);
         Mockito.when(companyRepository.findAll(PageRequest.of(1, 100))).thenReturn(emptyResultPage);
-        Mockito.when(companyFeignClient.fetchCompanyInfo(companies.get(0).getDisplaySymbol())).thenReturn(parsedCompanyInfo);
+        Mockito.when(companyFeignClient.fetchCompanyInfo(companies.get(0).getDisplaySymbol())).thenReturn(finnhubCompanyInfo);
         companiesShouldBeReturnedForSaving.add(TestData.getCompany());
 
         fetchingService.refreshAllCompaniesInfo();
@@ -107,15 +107,15 @@ public class FetchingServiceTest {
     @Test
     public void shouldRefreshAllCompaniesMetrics() {
         CompanyMetrics companyMetrics = TestData.getCompanyMetrics();
-        ParsedCompanyMetrics parsedCompanyMetrics;
+        FinnhubCompanyMetrics finnhubCompanyMetrics;
         companyMetrics.setCompany(TestData.getCompany());
-        parsedCompanyMetrics = TestData.getParsedCompanyMetrics(companyMetrics);
+        finnhubCompanyMetrics = TestData.getFinnhubCompanyMetrics(companyMetrics);
         List<CompanyMetrics> companyMetricsShouldBeReturnedForSaving = new ArrayList<>();
         companyMetricsShouldBeReturnedForSaving.add(companyMetrics);
 
         Mockito.when(companyRepository.findAll(PageRequest.of(0, 100))).thenReturn(resultPage);
         Mockito.when(companyRepository.findAll(PageRequest.of(1, 100))).thenReturn(emptyResultPage);
-        Mockito.when(companyFeignClient.fetchCompanyMetrics(companies.get(0).getDisplaySymbol())).thenReturn(parsedCompanyMetrics);
+        Mockito.when(companyFeignClient.fetchCompanyMetrics(companies.get(0).getDisplaySymbol())).thenReturn(finnhubCompanyMetrics);
 
         fetchingService.fetchAllCompaniesMetrics();
         Mockito.verify(companyMetricsRepository, Mockito.times(1)).saveAll(companyMetricsShouldBeReturnedForSaving);
@@ -124,9 +124,9 @@ public class FetchingServiceTest {
     @Test
     public void shouldFetchCompanyMetrics() {
         CompanyMetrics companyMetrics = TestData.getCompanyMetrics();
-        ParsedCompanyMetrics parsedCompanyMetrics;
+        FinnhubCompanyMetrics finnhubCompanyMetrics;
         companyMetrics.setCompany(TestData.getCompany());
-        parsedCompanyMetrics = TestData.getParsedCompanyMetrics(companyMetrics);
+        finnhubCompanyMetrics = TestData.getFinnhubCompanyMetrics(companyMetrics);
         List<CompanyMetrics> companyMetricsList = new ArrayList<>();
         List<CompanyMetrics> companyMetricsShouldBeReturnedForSaving = new ArrayList<>();
         companyMetricsList.add(companyMetrics);
@@ -136,7 +136,7 @@ public class FetchingServiceTest {
 
         Mockito.when(companyMetricsRepository.findAll(PageRequest.of(0, 100))).thenReturn(resultPage);
         Mockito.when(companyMetricsRepository.findAll(PageRequest.of(1, 100))).thenReturn(emptyResultPage);
-        Mockito.when(companyFeignClient.fetchCompanyMetrics(companyMetricsList.get(0).getCompany().getDisplaySymbol())).thenReturn(parsedCompanyMetrics);
+        Mockito.when(companyFeignClient.fetchCompanyMetrics(companyMetricsList.get(0).getCompany().getDisplaySymbol())).thenReturn(finnhubCompanyMetrics);
 
         fetchingService.refreshCompanyMetrics();
         Mockito.verify(companyMetricsRepository, Mockito.times(1)).saveAll(companyMetricsShouldBeReturnedForSaving);
@@ -146,13 +146,13 @@ public class FetchingServiceTest {
     public void shouldFetchStockData() {
         StockData stockData = TestData.getStockData();
         stockData.setCompany(TestData.getCompany());
-        ParsedStockData parsedStockData = TestData.getParsedStockData(stockData);
+        FinnhubStockData finnhubStockData = TestData.getFinnhubStockData(stockData);
         List<StockData> stockDataShouldBeReturnedForSaving = new ArrayList<>();
         stockDataShouldBeReturnedForSaving.add(stockData);
 
         Mockito.when(companyRepository.findAll(PageRequest.of(0, 100))).thenReturn(resultPage);
         Mockito.when(companyRepository.findAll(PageRequest.of(1, 100))).thenReturn(emptyResultPage);
-        Mockito.when(companyFeignClient.fetchCompanyStockData(companies.get(0).getDisplaySymbol())).thenReturn(parsedStockData);
+        Mockito.when(companyFeignClient.fetchCompanyStockData(companies.get(0).getDisplaySymbol())).thenReturn(finnhubStockData);
 
         fetchingService.fetchStockData();
         Mockito.verify(stockDataRepository, Mockito.times(1)).saveAll(stockDataShouldBeReturnedForSaving);
@@ -162,13 +162,13 @@ public class FetchingServiceTest {
     public void shouldFetchDailyStockData() {
         DailyStockData dailyStockData = TestData.getDailyStockData();
         dailyStockData.setCompany(TestData.getCompany());
-        ParsedStockData parsedStockData = TestData.getParsedStockData(dailyStockData);
+        FinnhubStockData finnhubStockData = TestData.getFinnhubStockData(dailyStockData);
         List<DailyStockData> stockDataShouldBeReturnedForSaving = new ArrayList<>();
         stockDataShouldBeReturnedForSaving.add(dailyStockData);
 
         Mockito.when(companyRepository.findAll(PageRequest.of(0, 100))).thenReturn(resultPage);
         Mockito.when(companyRepository.findAll(PageRequest.of(1, 100))).thenReturn(emptyResultPage);
-        Mockito.when(companyFeignClient.fetchCompanyStockData(companies.get(0).getDisplaySymbol())).thenReturn(parsedStockData);
+        Mockito.when(companyFeignClient.fetchCompanyStockData(companies.get(0).getDisplaySymbol())).thenReturn(finnhubStockData);
 
         fetchingService.fetchDailyStockData();
         Mockito.verify(dailyStockDataRepository, Mockito.times(1)).saveAll(stockDataShouldBeReturnedForSaving);

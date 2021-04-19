@@ -10,11 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ParsedCompany {
-    @JsonProperty("displaySymbol")
-    private String displaySymbol;
-    @JsonProperty("description")
-    private String description;
-    @JsonProperty("currency")
-    private String currency;
+public class FinnhubCompanyMetrics {
+    @JsonProperty("metric")
+    private FinnhubMetrics finnhubMetrics;
 }

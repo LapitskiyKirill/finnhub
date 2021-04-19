@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ParsedMetrics {
+public class FinnhubMetrics {
     @JsonProperty("52WeekPriceReturnDaily")
     private Double yearDailyReturn;
     @JsonProperty("26WeekPriceReturnDaily")

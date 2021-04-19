@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ParsedCompanyInfo {
+public class FinnhubCompanyInfo {
     @JsonProperty("country")
     private String country;
     @JsonProperty("exchange")

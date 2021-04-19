@@ -6,76 +6,74 @@ import com.gmail.kirilllapitsky.finnhub.entity.CompanyMetrics;
 import com.gmail.kirilllapitsky.finnhub.entity.DailyStockData;
 import com.gmail.kirilllapitsky.finnhub.entity.StockData;
 
-import java.time.LocalDateTime;
-
 public class FetchingObjectsMapper {
 
-    public static Company companyMapper(ParsedCompany parsedCompany) {
+    public static Company companyMapper(FinnhubCompany finnhubCompany) {
         return Company.
                 builder()
-                .currency(parsedCompany.getCurrency())
-                .description(parsedCompany.getDescription())
-                .displaySymbol(parsedCompany.getDisplaySymbol())
+                .currency(finnhubCompany.getCurrency())
+                .description(finnhubCompany.getDescription())
+                .displaySymbol(finnhubCompany.getDisplaySymbol())
                 .build();
     }
 
-    public static Company companyInfoMapper(Company company, ParsedCompanyInfo parsedCompanyInfo) {
-        company.setCountry(parsedCompanyInfo.getCountry());
-        company.setExchange(parsedCompanyInfo.getExchange());
-        company.setFinnhubIndustry(parsedCompanyInfo.getFinnhubIndustry());
-        company.setIpo(parsedCompanyInfo.getIpo());
-        company.setLogo(parsedCompanyInfo.getLogo());
-        company.setName(parsedCompanyInfo.getName());
-        company.setTicker(parsedCompanyInfo.getTicker());
-        company.setWebUrl(parsedCompanyInfo.getWeburl());
+    public static Company companyInfoMapper(Company company, FinnhubCompanyInfo finnhubCompanyInfo) {
+        company.setCountry(finnhubCompanyInfo.getCountry());
+        company.setExchange(finnhubCompanyInfo.getExchange());
+        company.setFinnhubIndustry(finnhubCompanyInfo.getFinnhubIndustry());
+        company.setIpo(finnhubCompanyInfo.getIpo());
+        company.setLogo(finnhubCompanyInfo.getLogo());
+        company.setName(finnhubCompanyInfo.getName());
+        company.setTicker(finnhubCompanyInfo.getTicker());
+        company.setWebUrl(finnhubCompanyInfo.getWeburl());
         return company;
     }
 
-    public static CompanyMetrics companyMetricsMapper(Company company, ParsedCompanyMetrics parsedCompanyMetrics) {
-        ParsedMetrics parsedMetrics = parsedCompanyMetrics.getParsedMetrics();
+    public static CompanyMetrics companyMetricsMapper(Company company, FinnhubCompanyMetrics finnhubCompanyMetrics) {
+        FinnhubMetrics finnhubMetrics = finnhubCompanyMetrics.getFinnhubMetrics();
         return CompanyMetrics
                 .builder()
                 .company(company)
-                .yearDailyReturn(parsedMetrics.getYearDailyReturn())
-                .halfYearDailyReturn(parsedMetrics.getHalfYearDailyReturn())
-                .quarterYearDailyReturn(parsedMetrics.getQuarterYearDailyReturn())
-                .tenDayAverageTradingVolume(parsedMetrics.getTenDayAverageTradingVolume())
-                .yearHigh(parsedMetrics.getYearHigh())
-                .yearHighDate(parsedMetrics.getYearHighDate())
-                .yearLow(parsedMetrics.getYearLow())
-                .yearLowDate(parsedMetrics.getYearLowDate())
+                .yearDailyReturn(finnhubMetrics.getYearDailyReturn())
+                .halfYearDailyReturn(finnhubMetrics.getHalfYearDailyReturn())
+                .quarterYearDailyReturn(finnhubMetrics.getQuarterYearDailyReturn())
+                .tenDayAverageTradingVolume(finnhubMetrics.getTenDayAverageTradingVolume())
+                .yearHigh(finnhubMetrics.getYearHigh())
+                .yearHighDate(finnhubMetrics.getYearHighDate())
+                .yearLow(finnhubMetrics.getYearLow())
+                .yearLowDate(finnhubMetrics.getYearLowDate())
                 .build();
     }
 
-    public static CompanyMetrics renewableCompanyMetricsMapper(CompanyMetrics companyMetrics, ParsedCompanyMetrics parsedCompanyMetrics) {
-        ParsedMetrics parsedMetrics = parsedCompanyMetrics.getParsedMetrics();
-        companyMetrics.setYearDailyReturn(parsedMetrics.getYearDailyReturn());
-        companyMetrics.setHalfYearDailyReturn(parsedMetrics.getHalfYearDailyReturn());
-        companyMetrics.setQuarterYearDailyReturn(parsedMetrics.getQuarterYearDailyReturn());
-        companyMetrics.setTenDayAverageTradingVolume(parsedMetrics.getTenDayAverageTradingVolume());
-        companyMetrics.setYearHigh(parsedMetrics.getYearHigh());
-        companyMetrics.setYearHighDate(parsedMetrics.getYearHighDate());
-        companyMetrics.setYearLow(parsedMetrics.getYearLow());
-        companyMetrics.setYearLowDate(parsedMetrics.getYearLowDate());
+    public static CompanyMetrics renewableCompanyMetricsMapper(CompanyMetrics companyMetrics, FinnhubCompanyMetrics finnhubCompanyMetrics) {
+        FinnhubMetrics finnhubMetrics = finnhubCompanyMetrics.getFinnhubMetrics();
+        companyMetrics.setYearDailyReturn(finnhubMetrics.getYearDailyReturn());
+        companyMetrics.setHalfYearDailyReturn(finnhubMetrics.getHalfYearDailyReturn());
+        companyMetrics.setQuarterYearDailyReturn(finnhubMetrics.getQuarterYearDailyReturn());
+        companyMetrics.setTenDayAverageTradingVolume(finnhubMetrics.getTenDayAverageTradingVolume());
+        companyMetrics.setYearHigh(finnhubMetrics.getYearHigh());
+        companyMetrics.setYearHighDate(finnhubMetrics.getYearHighDate());
+        companyMetrics.setYearLow(finnhubMetrics.getYearLow());
+        companyMetrics.setYearLowDate(finnhubMetrics.getYearLowDate());
         return companyMetrics;
 
     }
 
-    public static StockData stockDataMapper(Company company, ParsedStockData parsedStockData) {
+    public static StockData stockDataMapper(Company company, FinnhubStockData finnhubStockData) {
         return StockData
                 .builder()
                 .company(company)
-                .currentPrice(parsedStockData.getCurrentPrice())
-                .openPrice(parsedStockData.getOpenPrice())
+                .currentPrice(finnhubStockData.getCurrentPrice())
+                .openPrice(finnhubStockData.getOpenPrice())
                 .build();
     }
 
-    public static DailyStockData dailyStockDataMapper(Company company, ParsedStockData parsedStockData) {
+    public static DailyStockData dailyStockDataMapper(Company company, FinnhubStockData finnhubStockData) {
         return DailyStockData
                 .builder()
                 .company(company)
-                .highPrice(parsedStockData.getHighPrice())
-                .lowPrice(parsedStockData.getLowPrice())
+                .highPrice(finnhubStockData.getHighPrice())
+                .lowPrice(finnhubStockData.getLowPrice())
                 .build();
     }
 }

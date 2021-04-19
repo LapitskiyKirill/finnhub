@@ -7,12 +7,13 @@ import com.gmail.kirilllapitsky.finnhub.exception.ApiException;
 import com.gmail.kirilllapitsky.finnhub.repository.SubscriptionRepository;
 import com.gmail.kirilllapitsky.finnhub.repository.UserRepository;
 import com.gmail.kirilllapitsky.finnhub.security.enumerable.Role;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class RegisterService {
     private final UserRepository userRepository;
     private final SubscriptionRepository subscriptionRepository;
