@@ -6,10 +6,10 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-@SpringBootApplication
+@EnableScheduling
 @EnableFeignClients
 @EnableDiscoveryClient
-@EnableScheduling
+@SpringBootApplication
 public class SpringBootConfig {
     public static void main(String[] args) {
         SpringApplication.run(SpringBootConfig.class, args);
