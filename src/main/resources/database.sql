@@ -97,9 +97,11 @@ create table if not exists subscription
     id bigint not null
         constraint subscription_pk
             primary key,
-    start_date timestamp not null,
-    end_date timestamp,
-    role integer not null
+    start_date date,
+    end_date date,
+    role integer not null,
+    should_be_renew boolean not null,
+    renew_level integer
 );
 
 alter table subscription owner to postgres;
@@ -124,4 +126,16 @@ alter table daily_stock_data owner to postgres;
 
 create unique index if not exists daily_stock_data_id_uindex
     on daily_stock_data (id);
+
+create table if not exists payment
+(
+    id varchar not null,
+    user_id bigint not null
+        constraint payment_user_id_fk
+            references "user",
+    subscription_level integer not null,
+    is_completed boolean not null
+);
+
+alter table payment owner to postgres;
 
