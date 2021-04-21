@@ -2,26 +2,25 @@ package com.gmail.kirilllapitsky.finnhub.service;
 
 
 import com.gmail.kirilllapitsky.finnhub.exception.ApiException;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@NoArgsConstructor
 public class MailNotificationsSender {
-    private final JavaMailSender mailSender;
+    @Autowired
+    private JavaMailSender mailSender;
     @Value("$spring.mail.username")
-    String projectMail;
+    private String projectMail;
 
-    @Async
     public void notifyUsers(List<String> emails, String message) {
         emails.forEach(email -> {
             MimeMessagePreparator mimeMessagePreparator =

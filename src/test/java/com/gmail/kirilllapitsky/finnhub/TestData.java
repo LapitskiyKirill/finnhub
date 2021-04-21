@@ -3,10 +3,13 @@ package com.gmail.kirilllapitsky.finnhub;
 import com.gmail.kirilllapitsky.finnhub.dto.*;
 import com.gmail.kirilllapitsky.finnhub.entity.*;
 import com.gmail.kirilllapitsky.finnhub.security.enumerable.Role;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TestData {
     public static Company getCompany() {
@@ -156,5 +159,67 @@ public class TestData {
                 .isCredentialsNonExpired(true)
                 .isEnabled(true)
                 .build();
+    }
+
+    public static List<User> getUsers() {
+        List<User> users = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            users.add(User
+                    .builder()
+                    .id(Long.valueOf(i))
+                    .email("mail@gmail.com")
+                    .username("userName")
+                    .password("password")
+                    .build());
+        }
+
+        return users;
+    }
+
+    public static List<Subscription> getSubscriptions(List<User> users) {
+        return users
+                .stream()
+                .map(user -> Subscription
+                        .builder()
+                        .role(Role.MIDDLE)
+                        .user(user)
+                        .endDate(LocalDate.now().plusDays(7))
+                        .shouldBeRenew(false)
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    public static List<Subscription> getExpiringSubscriptions(List<User> users) {
+        return users
+                .stream()
+                .map(user -> Subscription
+                        .builder()
+                        .role(Role.MIDDLE)
+                        .user(user)
+                        .endDate(LocalDate.now().minusDays(1))
+                        .shouldBeRenew(false)
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    public static List<String> getEmails() {
+        List<String> emails = new ArrayList<>();
+        for (int i = 0; i < 2; i++) {
+            emails.add("email" + i + "@gmail.com");
+        }
+        return emails;
+    }
+
+
+    public static MimeMessagePreparator getMimeMessagePreparator(String email, String message) {
+        MimeMessagePreparator mimeMessagePreparator =
+                mimeMessage -> {
+                    MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
+                    messageHelper.setFrom("projectMail");
+                    messageHelper.setTo(email);
+                    messageHelper.setSubject("FinnhubProject notification.");
+                    messageHelper.setText(message);
+                };
+        return mimeMessagePreparator;
     }
 }
