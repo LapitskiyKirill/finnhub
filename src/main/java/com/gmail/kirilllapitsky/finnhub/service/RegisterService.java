@@ -37,7 +37,8 @@ public class RegisterService {
         Subscription subscription = Subscription
                 .builder()
                 .user(user)
-                .role(Role.BEGINNER)
+                .role(Role.GUEST)
+                .shouldBeRenew(false)
                 .build();
         subscriptionRepository.save(subscription);
     }

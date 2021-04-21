@@ -5,7 +5,7 @@ import com.gmail.kirilllapitsky.finnhub.entity.Company;
 import com.gmail.kirilllapitsky.finnhub.entity.CompanyMetrics;
 import com.gmail.kirilllapitsky.finnhub.entity.DailyStockData;
 import com.gmail.kirilllapitsky.finnhub.entity.StockData;
-import com.gmail.kirilllapitsky.finnhub.feignClient.CompanyFeignClient;
+import com.gmail.kirilllapitsky.finnhub.client.CompanyFeignClient;
 import com.gmail.kirilllapitsky.finnhub.repository.CompanyMetricsRepository;
 import com.gmail.kirilllapitsky.finnhub.repository.CompanyRepository;
 import com.gmail.kirilllapitsky.finnhub.repository.DailyStockDataRepository;

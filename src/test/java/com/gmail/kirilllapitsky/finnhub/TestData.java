@@ -78,7 +78,8 @@ public class TestData {
     public static Subscription getSubscription() {
         return Subscription
                 .builder()
-                .role(Role.BEGINNER)
+                .role(Role.GUEST)
+                .shouldBeRenew(false)
                 .build();
     }
 
