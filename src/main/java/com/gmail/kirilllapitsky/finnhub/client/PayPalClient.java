@@ -80,14 +80,7 @@ public class PayPalClient {
                     .get();
             String redirectUrl = redirectLink.getHref();
 
-            com.gmail.kirilllapitsky.finnhub.entity.Payment
-                    paymentToSave = new com.gmail.kirilllapitsky.finnhub.entity.Payment();
-            paymentToSave.setPaymentId(createdPayment.getId());
-            paymentToSave.setUser(user);
-            paymentToSave.setIsCompleted(false);
-            paymentToSave.setSubscriptionLevel(role);
-            paymentRepository.save(paymentToSave);
-
+            savePayment(createdPayment, user, role);
             response.put(REDIRECT_LINK, redirectUrl);
         }
         return response;
@@ -102,13 +95,27 @@ public class PayPalClient {
         try {
             APIContext context = new APIContext(clientId, clientSecret, PAYMENT_MODE);
             Payment createdPayment = payment.execute(context, paymentExecution);
-            com.gmail.kirilllapitsky.finnhub.entity.Payment updatedPayment = paymentRepository.findById(createdPayment.getId()).orElseThrow(() -> new ApiException("Invalid transaction."));
-            updatedPayment.setIsCompleted(true);
-            subscriptionService.setSubscription(updatedPayment.getUser(), updatedPayment.getSubscriptionLevel());
-            paymentRepository.save(updatedPayment);
+            updatePayment(createdPayment);
         } catch (PayPalRESTException e) {
             log.error(e.getMessage());
         }
+    }
+
+    private void savePayment(Payment createdPayment, User user, Role role) {
+        com.gmail.kirilllapitsky.finnhub.entity.Payment
+                paymentToSave = new com.gmail.kirilllapitsky.finnhub.entity.Payment();
+        paymentToSave.setPaymentId(createdPayment.getId());
+        paymentToSave.setUser(user);
+        paymentToSave.setIsCompleted(false);
+        paymentToSave.setSubscriptionLevel(role);
+        paymentRepository.save(paymentToSave);
+    }
+
+    private void updatePayment(Payment createdPayment) throws ApiException {
+        com.gmail.kirilllapitsky.finnhub.entity.Payment updatedPayment = paymentRepository.findById(createdPayment.getId()).orElseThrow(() -> new ApiException("Invalid transaction."));
+        updatedPayment.setIsCompleted(true);
+        subscriptionService.setSubscription(updatedPayment.getUser(), updatedPayment.getSubscriptionLevel());
+        paymentRepository.save(updatedPayment);
     }
 
     private String getPrice(Role role) throws ApiException {
