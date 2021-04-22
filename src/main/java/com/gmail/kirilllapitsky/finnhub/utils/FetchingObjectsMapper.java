@@ -9,8 +9,7 @@ import com.gmail.kirilllapitsky.finnhub.entity.StockData;
 public class FetchingObjectsMapper {
 
     public static Company companyMapper(FinnhubCompany finnhubCompany) {
-        return Company.
-                builder()
+        return Company.builder()
                 .currency(finnhubCompany.getCurrency())
                 .description(finnhubCompany.getDescription())
                 .displaySymbol(finnhubCompany.getDisplaySymbol())
@@ -31,8 +30,7 @@ public class FetchingObjectsMapper {
 
     public static CompanyMetrics companyMetricsMapper(Company company, FinnhubCompanyMetrics finnhubCompanyMetrics) {
         FinnhubMetrics finnhubMetrics = finnhubCompanyMetrics.getFinnhubMetrics();
-        return CompanyMetrics
-                .builder()
+        return CompanyMetrics.builder()
                 .company(company)
                 .yearDailyReturn(finnhubMetrics.getYearDailyReturn())
                 .halfYearDailyReturn(finnhubMetrics.getHalfYearDailyReturn())
@@ -60,8 +58,7 @@ public class FetchingObjectsMapper {
     }
 
     public static StockData stockDataMapper(Company company, FinnhubStockData finnhubStockData) {
-        return StockData
-                .builder()
+        return StockData.builder()
                 .company(company)
                 .currentPrice(finnhubStockData.getCurrentPrice())
                 .openPrice(finnhubStockData.getOpenPrice())
@@ -69,8 +66,7 @@ public class FetchingObjectsMapper {
     }
 
     public static DailyStockData dailyStockDataMapper(Company company, FinnhubStockData finnhubStockData) {
-        return DailyStockData
-                .builder()
+        return DailyStockData.builder()
                 .company(company)
                 .highPrice(finnhubStockData.getHighPrice())
                 .lowPrice(finnhubStockData.getLowPrice())

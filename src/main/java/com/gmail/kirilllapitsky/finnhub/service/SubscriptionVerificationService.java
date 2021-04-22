@@ -26,8 +26,7 @@ public class SubscriptionVerificationService {
     public void subscriptionVerification() {
         List<Subscription> expiredSubscriptions = subscriptionRepository.findAllByEndDateAndShouldBeRenew(LocalDate.now().minusDays(1), false);
         List<Subscription> subscriptions = subscriptionRepository.findAllByEndDate(LocalDate.now().minusDays(1));
-        List<Subscription> subscriptionsToUpdate = subscriptions
-                .stream()
+        List<Subscription> subscriptionsToUpdate = subscriptions.stream()
                 .map(this::verifySubscription)
                 .collect(Collectors.toList());
         subscriptionRepository.saveAll(subscriptionsToUpdate);

@@ -3,8 +3,6 @@ package com.gmail.kirilllapitsky.finnhub;
 import com.gmail.kirilllapitsky.finnhub.dto.*;
 import com.gmail.kirilllapitsky.finnhub.entity.*;
 import com.gmail.kirilllapitsky.finnhub.security.enumerable.Role;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.mail.javamail.MimeMessagePreparator;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -13,8 +11,7 @@ import java.util.stream.Collectors;
 
 public class TestData {
     public static Company getCompany() {
-        return Company
-                .builder()
+        return Company.builder()
                 .country("US")
                 .currency("currency")
                 .description("description")
@@ -30,8 +27,7 @@ public class TestData {
     }
 
     public static CompanyMetrics getCompanyMetrics() {
-        return CompanyMetrics
-                .builder()
+        return CompanyMetrics.builder()
                 .yearLow(1.1)
                 .yearHigh(2.2)
                 .tenDayAverageTradingVolume(0.1)
@@ -44,8 +40,7 @@ public class TestData {
     }
 
     public static FinnhubCompanyMetrics getFinnhubCompanyMetrics(CompanyMetrics companyMetrics) {
-        return FinnhubCompanyMetrics
-                .builder()
+        return FinnhubCompanyMetrics.builder()
                 .finnhubMetrics(
                         FinnhubMetrics
                                 .builder()
@@ -63,24 +58,21 @@ public class TestData {
     }
 
     public static DailyStockData getDailyStockData() {
-        return DailyStockData
-                .builder()
+        return DailyStockData.builder()
                 .lowPrice(1.1)
                 .highPrice(2.2)
                 .build();
     }
 
     public static StockData getStockData() {
-        return StockData
-                .builder()
+        return StockData.builder()
                 .openPrice(2.2)
                 .currentPrice(1.2)
                 .build();
     }
 
     public static Subscription getSubscription() {
-        return Subscription
-                .builder()
+        return Subscription.builder()
                 .role(Role.GUEST)
                 .shouldBeRenew(false)
                 .build();
@@ -102,8 +94,7 @@ public class TestData {
     }
 
     public static FinnhubCompany getFinnhubCompany() {
-        return FinnhubCompany
-                .builder()
+        return FinnhubCompany.builder()
                 .currency("str")
                 .description("str")
                 .displaySymbol("str")
@@ -111,8 +102,7 @@ public class TestData {
     }
 
     public static FinnhubCompanyInfo getFinnhubCompanyInfoByCompany(Company company) {
-        return FinnhubCompanyInfo
-                .builder()
+        return FinnhubCompanyInfo.builder()
                 .country(company.getCountry())
                 .exchange(company.getExchange())
                 .finnhubIndustry(company.getFinnhubIndustry())
@@ -125,24 +115,21 @@ public class TestData {
     }
 
     public static FinnhubStockData getFinnhubStockData(StockData stockData) {
-        return FinnhubStockData
-                .builder()
+        return FinnhubStockData.builder()
                 .currentPrice(stockData.getCurrentPrice())
                 .openPrice(stockData.getOpenPrice())
                 .build();
     }
 
     public static FinnhubStockData getFinnhubStockData(DailyStockData dailyStockData) {
-        return FinnhubStockData
-                .builder()
+        return FinnhubStockData.builder()
                 .highPrice(dailyStockData.getHighPrice())
                 .lowPrice(dailyStockData.getLowPrice())
                 .build();
     }
 
     public static RegisterRequest getRegisterRequest() {
-        return RegisterRequest
-                .builder()
+        return RegisterRequest.builder()
                 .email("e@mail.com")
                 .password("password")
                 .username("username")
@@ -164,21 +151,18 @@ public class TestData {
     public static List<User> getUsers() {
         List<User> users = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
-            users.add(User
-                    .builder()
+            users.add(User.builder()
                     .id(Long.valueOf(i))
                     .email("mail@gmail.com")
                     .username("userName")
                     .password("password")
                     .build());
         }
-
         return users;
     }
 
     public static List<Subscription> getSubscriptions(List<User> users) {
-        return users
-                .stream()
+        return users.stream()
                 .map(user -> Subscription
                         .builder()
                         .role(Role.MIDDLE)
@@ -190,8 +174,7 @@ public class TestData {
     }
 
     public static List<Subscription> getExpiringSubscriptions(List<User> users) {
-        return users
-                .stream()
+        return users.stream()
                 .map(user -> Subscription
                         .builder()
                         .role(Role.MIDDLE)
@@ -208,18 +191,5 @@ public class TestData {
             emails.add("email" + i + "@gmail.com");
         }
         return emails;
-    }
-
-
-    public static MimeMessagePreparator getMimeMessagePreparator(String email, String message) {
-        MimeMessagePreparator mimeMessagePreparator =
-                mimeMessage -> {
-                    MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
-                    messageHelper.setFrom("projectMail");
-                    messageHelper.setTo(email);
-                    messageHelper.setSubject("FinnhubProject notification.");
-                    messageHelper.setText(message);
-                };
-        return mimeMessagePreparator;
     }
 }

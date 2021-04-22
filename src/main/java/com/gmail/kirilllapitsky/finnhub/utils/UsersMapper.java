@@ -8,8 +8,7 @@ import java.util.stream.Collectors;
 
 public class UsersMapper {
     public static List<String> subscriptionToUserEmailMapper(List<Subscription> subscriptions){
-        return subscriptions
-                .stream()
+        return subscriptions.stream()
                 .map(Subscription::getUser)
                 .map(User::getEmail)
                 .collect(Collectors.toList());
