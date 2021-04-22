@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -24,15 +24,19 @@ public class Subscription {
     @JoinColumn(name = "id")
     private User user;
     @Column(name = "start_date")
-    private LocalDateTime startDate;
+    private LocalDate startDate;
     @Column(name = "end_date")
-    private LocalDateTime endDate;
+    private LocalDate endDate;
     @Column(name = "role")
     private Role role;
+    @Column(name = "should_be_renew")
+    private Boolean shouldBeRenew;
+    @Column(name = "renew_level")
+    private Role renewLevel;
 
     @PrePersist
     public void onPrePersist() {
-        startDate = LocalDateTime.now();
+        startDate = LocalDate.now();
     }
 
 }

@@ -3,7 +3,6 @@ package com.gmail.kirilllapitsky.finnhub.security;
 import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gmail.kirilllapitsky.finnhub.entity.User;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
-import static com.gmail.kirilllapitsky.finnhub.security.SecurityConstants.*;
+import static com.gmail.kirilllapitsky.finnhub.constants.SecurityConstants.*;
 
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {

@@ -40,7 +40,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api/register").permitAll()
                 .antMatchers("/login").permitAll()
-                .antMatchers("/api/fetch").permitAll();
+                .antMatchers("/api/paypal/payment/pay/").fullyAuthenticated()
+                .antMatchers("/api/paypal/payment/complete/").permitAll()
+                .antMatchers("/api").permitAll();
     }
 
     @Override

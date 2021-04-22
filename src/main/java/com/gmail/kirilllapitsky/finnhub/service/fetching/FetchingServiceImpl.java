@@ -1,11 +1,11 @@
 package com.gmail.kirilllapitsky.finnhub.service.fetching;
 
+import com.gmail.kirilllapitsky.finnhub.client.CompanyFeignClient;
 import com.gmail.kirilllapitsky.finnhub.dto.FinnhubCompany;
 import com.gmail.kirilllapitsky.finnhub.entity.Company;
 import com.gmail.kirilllapitsky.finnhub.entity.CompanyMetrics;
 import com.gmail.kirilllapitsky.finnhub.entity.DailyStockData;
 import com.gmail.kirilllapitsky.finnhub.entity.StockData;
-import com.gmail.kirilllapitsky.finnhub.feignClient.CompanyFeignClient;
 import com.gmail.kirilllapitsky.finnhub.repository.CompanyMetricsRepository;
 import com.gmail.kirilllapitsky.finnhub.repository.CompanyRepository;
 import com.gmail.kirilllapitsky.finnhub.repository.DailyStockDataRepository;
@@ -35,8 +35,7 @@ public class FetchingServiceImpl implements FetchingService {
     @Override
     public void fetchAllCompanies() {
         List<FinnhubCompany> parsedCompanies = companyFeignClient.fetchAllCompanies();
-        List<Company> companies = parsedCompanies
-                .stream()
+        List<Company> companies = parsedCompanies.stream()
                 .map(FetchingObjectsMapper::companyMapper)
                 .limit(100)
                 .collect(Collectors.toList());
@@ -52,8 +51,7 @@ public class FetchingServiceImpl implements FetchingService {
             pageable = PageRequest.of(page, pageSize);
             Page<Company> resultPage = companyRepository.findAll(pageable);
             if (!resultPage.isEmpty()) {
-                List<Company> updatedCompanies = resultPage.getContent()
-                        .stream()
+                List<Company> updatedCompanies = resultPage.getContent().stream()
                         .map(company -> companyInfoMapper(
                                 company,
                                 companyFeignClient.fetchCompanyInfo(company.getDisplaySymbol()))
@@ -76,8 +74,7 @@ public class FetchingServiceImpl implements FetchingService {
             pageable = PageRequest.of(page, pageSize);
             Page<Company> resultPage = companyRepository.findAll(pageable);
             if (!resultPage.isEmpty()) {
-                List<CompanyMetrics> companyMetricsList = resultPage.getContent()
-                        .stream()
+                List<CompanyMetrics> companyMetricsList = resultPage.getContent().stream()
                         .map(company -> companyMetricsMapper(company, companyFeignClient.fetchCompanyMetrics(company.getDisplaySymbol())))
                         .collect(Collectors.toList());
                 companyMetricsRepository.saveAll(companyMetricsList);
@@ -97,8 +94,7 @@ public class FetchingServiceImpl implements FetchingService {
             pageable = PageRequest.of(page, pageSize);
             Page<CompanyMetrics> resultPage = companyMetricsRepository.findAll(pageable);
             if (!resultPage.isEmpty()) {
-                List<CompanyMetrics> companyMetricsList = resultPage.getContent()
-                        .stream()
+                List<CompanyMetrics> companyMetricsList = resultPage.getContent().stream()
                         .map(companyMetrics -> renewableCompanyMetricsMapper(
                                 companyMetrics,
                                 companyFeignClient.fetchCompanyMetrics(companyMetrics.getCompany().getDisplaySymbol())
@@ -122,8 +118,7 @@ public class FetchingServiceImpl implements FetchingService {
             pageable = PageRequest.of(page, pageSize);
             Page<Company> resultPage = companyRepository.findAll(pageable);
             if (!resultPage.isEmpty()) {
-                List<StockData> stockDataList = resultPage.getContent()
-                        .stream()
+                List<StockData> stockDataList = resultPage.getContent().stream()
                         .map(company ->
                                 stockDataMapper(company,
                                         companyFeignClient.fetchCompanyStockData(company.getDisplaySymbol())
@@ -147,8 +142,7 @@ public class FetchingServiceImpl implements FetchingService {
             pageable = PageRequest.of(page, pageSize);
             Page<Company> resultPage = companyRepository.findAll(pageable);
             if (!resultPage.isEmpty()) {
-                List<DailyStockData> dailyStockDataList = resultPage.getContent()
-                        .stream()
+                List<DailyStockData> dailyStockDataList = resultPage.getContent().stream()
                         .map(company -> dailyStockDataMapper(company,
                                 companyFeignClient.fetchCompanyStockData(company.getDisplaySymbol())
                                 )

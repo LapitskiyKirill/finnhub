@@ -1,4 +1,4 @@
-package com.gmail.kirilllapitsky.finnhub.feignClient;
+package com.gmail.kirilllapitsky.finnhub.client;
 
 import com.gmail.kirilllapitsky.finnhub.dto.FinnhubCompany;
 import com.gmail.kirilllapitsky.finnhub.dto.FinnhubCompanyInfo;

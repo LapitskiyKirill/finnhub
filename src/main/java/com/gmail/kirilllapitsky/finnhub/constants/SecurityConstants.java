@@ -1,4 +1,4 @@
-package com.gmail.kirilllapitsky.finnhub.security;
+package com.gmail.kirilllapitsky.finnhub.constants;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

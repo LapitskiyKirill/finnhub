@@ -68,7 +68,7 @@ public class RegisterServiceTest {
     }
 
     @Test
-    public void shouldNotRegisterWhenUsernameOrEmailExists() throws ApiException {
+    public void shouldNotRegisterWhenUsernameOrEmailExists() {
         Mockito.when(userRepository.findByUsername(registerRequest.getUsername())).thenReturn(Optional.empty());
         Mockito.when(userRepository.findByEmail(registerRequest.getEmail())).thenReturn(Optional.of(user));
         Mockito.when(passwordEncoder.encode(registerRequest.getPassword())).thenReturn(registerRequest.getPassword());

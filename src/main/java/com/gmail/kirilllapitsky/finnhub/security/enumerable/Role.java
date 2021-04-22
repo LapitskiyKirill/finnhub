@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public enum Role {
+    GUEST(Set.of(Permissions.VIEWING), 0),
     BEGINNER(Set.of(Permissions.TRACKING), 2),
     MIDDLE(Set.of(Permissions.TRACKING), 6),
     SENIOR(Set.of(Permissions.TRACKING), 10),
