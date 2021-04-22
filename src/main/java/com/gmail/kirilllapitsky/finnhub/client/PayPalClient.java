@@ -73,8 +73,7 @@ public class PayPalClient {
         createdPayment = payment.create(context);
         if (createdPayment != null) {
             List<Links> links = createdPayment.getLinks();
-            Links redirectLink = links
-                    .stream()
+            Links redirectLink = links.stream()
                     .filter(link -> link.getRel().equals(APPROVAL_LINK))
                     .findFirst()
                     .get();
