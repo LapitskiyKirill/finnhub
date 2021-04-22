@@ -3,7 +3,7 @@ package com.gmail.kirilllapitsky.finnhub.security.enumerable;
 public enum Permissions {
     ADMINISTRATE("ADMINISTRATE"),
     TRACKING("TRACKING"),
-    WIEWING("WIEWING");
+    VIEWING("VIEWING");
 
     private final String permission;
 

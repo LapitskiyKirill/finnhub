@@ -3,6 +3,7 @@ package com.gmail.kirilllapitsky.finnhub.security;
 import com.gmail.kirilllapitsky.finnhub.entity.Response;
 import com.gmail.kirilllapitsky.finnhub.exception.ApiException;
 import com.gmail.kirilllapitsky.finnhub.exception.NoSuchEntityException;
+import com.paypal.base.rest.PayPalRESTException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -21,5 +22,11 @@ public class DefaultControllerAdvice {
     public ResponseEntity<Response> handleException(NoSuchEntityException e) {
         Response response = new Response(e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(PayPalRESTException.class)
+    public ResponseEntity<Response> handleException(PayPalRESTException e) {
+        Response response = new Response(e.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }

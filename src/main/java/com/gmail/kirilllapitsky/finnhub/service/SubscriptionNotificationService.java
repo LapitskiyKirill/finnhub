@@ -1,7 +1,6 @@
 package com.gmail.kirilllapitsky.finnhub.service;
 
 import com.gmail.kirilllapitsky.finnhub.entity.Subscription;
-import com.gmail.kirilllapitsky.finnhub.entity.User;
 import com.gmail.kirilllapitsky.finnhub.repository.SubscriptionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,8 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static com.gmail.kirilllapitsky.finnhub.utils.UsersMapper.subscriptionToUserEmailMapper;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -23,16 +23,10 @@ public class SubscriptionNotificationService {
     @Transactional
     public void subscriptionWeekNotification() {
         List<Subscription> subscriptionsShouldExpiredInWeek = subscriptionRepository.findAllByEndDate(LocalDate.now().plusDays(7));
-        List<User> usersShouldBeNotified = subscriptionsShouldExpiredInWeek
-                .stream()
-                .map(Subscription::getUser)
-                .collect(Collectors.toList());
+        List<String> usersShouldBeNotified = subscriptionToUserEmailMapper(subscriptionsShouldExpiredInWeek);
         mailNotificationsSender.notifyUsers(
-                usersShouldBeNotified
-                        .stream()
-                        .map(User::getEmail)
-                        .collect(Collectors.toList())
-                , "Your subscription will end " + LocalDate.now().toString()
+                usersShouldBeNotified,
+                "Your subscription will end " + LocalDate.now().toString()
         );
     }
 }

@@ -3,6 +3,7 @@ package com.gmail.kirilllapitsky.finnhub.controller;
 import com.gmail.kirilllapitsky.finnhub.client.PayPalClient;
 import com.gmail.kirilllapitsky.finnhub.exception.ApiException;
 import com.gmail.kirilllapitsky.finnhub.security.enumerable.Role;
+import com.paypal.base.rest.PayPalRESTException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +17,8 @@ import java.util.Map;
 public class PayPalController {
     private final PayPalClient payPalClient;
 
-    @PostMapping(value = "/payment/start")
-    public Map<String, Object> makePayment(HttpServletRequest request, @RequestParam("role") Role role) throws ApiException {
+    @PostMapping(value = "/payment/pay")
+    public Map<String, Object> makePayment(HttpServletRequest request, @RequestParam("role") Role role) throws ApiException, PayPalRESTException {
         return payPalClient.createPayment(request, role);
     }
 

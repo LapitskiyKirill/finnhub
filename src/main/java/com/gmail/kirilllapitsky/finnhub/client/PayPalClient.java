@@ -11,6 +11,7 @@ import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -22,102 +23,109 @@ import java.util.List;
 import java.util.Map;
 
 import static com.auth0.jwt.JWT.require;
-import static com.gmail.kirilllapitsky.finnhub.security.SecurityConstants.*;
+import static com.gmail.kirilllapitsky.finnhub.constants.PayPalConstants.*;
+import static com.gmail.kirilllapitsky.finnhub.constants.SecurityConstants.*;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class PayPalClient {
     @Value("${paypal.clientId}")
-    String clientId;
+    private String clientId;
     @Value("${paypal.secret}")
-    String clientSecret;
+    private String clientSecret;
+    @Value("${paypal.returnLink}")
+    private String returnLink;
+    @Value("${paypal.cancelLink}")
+    private String cancelLink;
     private final PaymentRepository paymentRepository;
     private final SubscriptionService subscriptionService;
     private final UserRepository userRepository;
 
-    public Map<String, Object> createPayment(HttpServletRequest request, Role role) throws ApiException {
-        User user = getUser(request);
-        Map<String, Object> response = new HashMap<>();
+    public Map<String, Object> createPayment(HttpServletRequest request, Role role) throws ApiException, PayPalRESTException {
         Amount amount = new Amount();
-        amount.setTotal(String.valueOf(10));
-        amount.setCurrency("USD");
-        switch (role) {
-            case BEGINNER:
-                amount.setTotal(String.valueOf(10));
-                break;
-            case MIDDLE:
-                amount.setTotal(String.valueOf(20));
-                break;
-            case SENIOR:
-                amount.setTotal(String.valueOf(30));
-                break;
-        }
+        amount.setCurrency(CURRENCY);
+        amount.setTotal(getPrice(role));
+
         Transaction transaction = new Transaction();
         transaction.setAmount(amount);
         List<Transaction> transactions = new ArrayList<>();
         transactions.add(transaction);
 
         Payer payer = new Payer();
-        payer.setPaymentMethod("paypal");
+        payer.setPaymentMethod(PAYMENT_METHOD);
 
         Payment payment = new Payment();
-        payment.setIntent("sale");
+        payment.setIntent(INTENT);
         payment.setPayer(payer);
         payment.setTransactions(transactions);
 
         RedirectUrls redirectUrls = new RedirectUrls();
-        redirectUrls.setCancelUrl("http://localhost:4200/cancel");
-        redirectUrls.setReturnUrl("http://localhost:8080/api/paypal/payment/complete");
+        redirectUrls.setCancelUrl(cancelLink);
+        redirectUrls.setReturnUrl(returnLink);
         payment.setRedirectUrls(redirectUrls);
+
+        User user = getUser(request);
+        Map<String, Object> response = new HashMap<>();
         Payment createdPayment;
-        try {
-            String redirectUrl = "";
-            APIContext context = new APIContext(clientId, clientSecret, "sandbox");
-            createdPayment = payment.create(context);
-            if (createdPayment != null) {
-                List<Links> links = createdPayment.getLinks();
-                for (Links link : links) {
-                    if (link.getRel().equals("approval_url")) {
-                        redirectUrl = link.getHref();
-                        break;
-                    }
-                }
-                com.gmail.kirilllapitsky.finnhub.entity.Payment paymentToSave = new com.gmail.kirilllapitsky.finnhub.entity.Payment();
-                paymentToSave.setPaymentId(createdPayment.getId());
-                paymentToSave.setUser(user);
-                paymentToSave.setIsCompleted(false);
-                paymentToSave.setSubscriptionLevel(role);
-                paymentRepository.save(paymentToSave);
-                response.put("status", "success");
-                response.put("redirect_url", redirectUrl);
-            }
-        } catch (PayPalRESTException e) {
-            System.out.println("Error happened during payment creation!");
+
+        APIContext context = new APIContext(clientId, clientSecret, PAYMENT_MODE);
+        createdPayment = payment.create(context);
+        if (createdPayment != null) {
+            List<Links> links = createdPayment.getLinks();
+            Links redirectLink = links
+                    .stream()
+                    .filter(link -> link.getRel().equals(APPROVAL_LINK))
+                    .findFirst()
+                    .get();
+            String redirectUrl = redirectLink.getHref();
+
+            com.gmail.kirilllapitsky.finnhub.entity.Payment
+                    paymentToSave = new com.gmail.kirilllapitsky.finnhub.entity.Payment();
+            paymentToSave.setPaymentId(createdPayment.getId());
+            paymentToSave.setUser(user);
+            paymentToSave.setIsCompleted(false);
+            paymentToSave.setSubscriptionLevel(role);
+            paymentRepository.save(paymentToSave);
+
+            response.put(REDIRECT_LINK, redirectUrl);
         }
         return response;
     }
 
     public void completePayment(HttpServletRequest request) throws ApiException {
         Payment payment = new Payment();
-        payment.setId(request.getParameter("paymentId"));
+        payment.setId(request.getParameter(REQUEST_PAYMENT_ID));
 
         PaymentExecution paymentExecution = new PaymentExecution();
-        paymentExecution.setPayerId(request.getParameter("PayerID"));
+        paymentExecution.setPayerId(request.getParameter(REQUEST_PAYER_ID));
         try {
-            APIContext context = new APIContext(clientId, clientSecret, "sandbox");
+            APIContext context = new APIContext(clientId, clientSecret, PAYMENT_MODE);
             Payment createdPayment = payment.execute(context, paymentExecution);
-            com.gmail.kirilllapitsky.finnhub.entity.Payment paymentToSave = paymentRepository.findById(createdPayment.getId()).orElseThrow(() -> new ApiException("Invalid transaction"));
-            paymentToSave.setIsCompleted(true);
-            subscriptionService.setSubscription(paymentToSave.getUser(), paymentToSave.getSubscriptionLevel());
-            paymentRepository.save(paymentToSave);
+            com.gmail.kirilllapitsky.finnhub.entity.Payment updatedPayment = paymentRepository.findById(createdPayment.getId()).orElseThrow(() -> new ApiException("Invalid transaction."));
+            updatedPayment.setIsCompleted(true);
+            subscriptionService.setSubscription(updatedPayment.getUser(), updatedPayment.getSubscriptionLevel());
+            paymentRepository.save(updatedPayment);
         } catch (PayPalRESTException e) {
-            System.err.println(e.getDetails());
-        } catch (ApiException e) {
-            throw new ApiException(e.getMessage());
+            log.error(e.getMessage());
         }
     }
 
-    public User getUser(HttpServletRequest request) throws ApiException {
+    private String getPrice(Role role) throws ApiException {
+        switch (role) {
+            case BEGINNER:
+                return BEGINNER_PRICE;
+            case MIDDLE:
+                return MIDDLE_PRICE;
+            case SENIOR:
+                return SENIOR_PRICE;
+            default: {
+                throw new ApiException("Invalid role passed to payment creation.");
+            }
+        }
+    }
+
+    private User getUser(HttpServletRequest request) throws ApiException {
         String username = require(Algorithm.HMAC512(SECRET.getBytes()))
                 .build()
                 .verify(request.getHeader(HEADER).replace(TOKEN_PREFIX, ""))
@@ -125,7 +133,5 @@ public class PayPalClient {
 
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new ApiException("Invalid token."));
-
-
     }
 }

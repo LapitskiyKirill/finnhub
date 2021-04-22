@@ -20,7 +20,6 @@ public class SubscriptionService {
     if subscription level = new level, renew*/
     public void setSubscription(User user, Role role) {
         Subscription subscription = subscriptionRepository.findById(user.getId()).get();
-
         if (subscription.getRole().ordinal() > role.ordinal()) {
             subscription.setRenewLevel(role);
             subscription.setShouldBeRenew(true);

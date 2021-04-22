@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static com.auth0.jwt.JWT.require;
-import static com.gmail.kirilllapitsky.finnhub.security.SecurityConstants.*;
+import static com.gmail.kirilllapitsky.finnhub.constants.SecurityConstants.*;
 
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {

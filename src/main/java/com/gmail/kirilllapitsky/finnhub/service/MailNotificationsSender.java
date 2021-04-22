@@ -1,8 +1,8 @@
 package com.gmail.kirilllapitsky.finnhub.service;
 
 
-import com.gmail.kirilllapitsky.finnhub.exception.ApiException;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Slf4j
 @Component
 @NoArgsConstructor
 public class MailNotificationsSender {
@@ -23,24 +24,22 @@ public class MailNotificationsSender {
 
     public void notifyUsers(List<String> emails, String message) {
         emails.forEach(email -> {
-            MimeMessagePreparator mimeMessagePreparator =
-                    mimeMessage -> {
-                        MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
-                        messageHelper.setFrom(projectMail);
-                        messageHelper.setTo(email);
-                        messageHelper.setSubject("FinnhubProject notification.");
-                        messageHelper.setText(message);
-                    };
+            MimeMessagePreparator mimeMessagePreparator = getMessage(email, message);
             try {
                 mailSender.send(mimeMessagePreparator);
             } catch (MailException e) {
-                try {
-                    e.printStackTrace();
-                    throw new ApiException("Can`t send message.");
-                } catch (ApiException apiException) {
-                    apiException.printStackTrace();
-                }
+                log.error(e.getMessage());
             }
         });
+    }
+
+    private MimeMessagePreparator getMessage(String email, String message) {
+        return mimeMessage -> {
+            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
+            messageHelper.setFrom(projectMail);
+            messageHelper.setTo(email);
+            messageHelper.setSubject("FinnhubProject notification.");
+            messageHelper.setText(message);
+        };
     }
 }
