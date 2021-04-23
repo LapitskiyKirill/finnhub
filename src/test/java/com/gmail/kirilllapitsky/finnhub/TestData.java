@@ -79,8 +79,7 @@ public class TestData {
     }
 
     public static User getUser() {
-        return User
-                .builder()
+        return User.builder()
                 .email("mail@gmail.com")
                 .username("userName")
                 .password("password")

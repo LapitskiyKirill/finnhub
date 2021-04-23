@@ -28,12 +28,9 @@ public class TrackingService {
         userRepository.save(user);
     }
 
-    public void unTrack(User user, String displaySymbol) throws ApiException, NoSuchEntityException {
+    public void unTrack(User user, String displaySymbol) throws NoSuchEntityException {
         Company company = getCompanyByDisplaySymbol(displaySymbol);
-        if (user.getTrackingCompanies().contains(company))
-            user.getTrackingCompanies().remove(company);
-        else
-            throw new ApiException(String.format("No company with display symbol %s.", company.getName()));
+        user.getTrackingCompanies().remove(company);
         userRepository.save(user);
     }
 
