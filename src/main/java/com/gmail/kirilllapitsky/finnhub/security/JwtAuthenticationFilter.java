@@ -37,7 +37,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .readValue(request.getInputStream(), User.class);
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
 
-        if (!user.isAccountNonLocked())
+        if (!userDetails.isAccountNonLocked())
             throw new ApiException("Your account is locked");
         return authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
