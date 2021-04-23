@@ -3,6 +3,7 @@ package com.gmail.kirilllapitsky.finnhub.security;
 import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gmail.kirilllapitsky.finnhub.entity.User;
+import com.gmail.kirilllapitsky.finnhub.exception.ApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         User user = new ObjectMapper()
                 .readValue(request.getInputStream(), User.class);
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
+
+        if (!user.isAccountNonLocked())
+            throw new ApiException("Your account is locked");
         return authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         user.getUsername(),

@@ -23,6 +23,7 @@ import java.util.List;
 import static com.auth0.jwt.JWT.require;
 import static com.gmail.kirilllapitsky.finnhub.constants.SecurityConstants.*;
 
+@RestController
 @RequestMapping("/api/tracking")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TrackingController {
@@ -49,7 +50,7 @@ public class TrackingController {
 
     @GetMapping("/getAllCompanies")
     public List<CompanyDto> getAllCompanies(@RequestParam("pageNumber") int pageNumber,
-                                            @RequestParam("pageNumber") int pageSize) {
+                                            @RequestParam("pageSize") int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         return companyService.getAllCompanies(pageable);
     }
@@ -64,7 +65,7 @@ public class TrackingController {
     public List<StockDataDto> getCompanyStockData(@ModelAttribute("user") User user,
                                                   @RequestParam("displaySymbol") String displaySymbol,
                                                   @RequestParam("pageNumber") int pageNumber,
-                                                  @RequestParam("pageNumber") int pageSize) throws ApiException, NoSuchEntityException {
+                                                  @RequestParam("pageSize") int pageSize) throws ApiException, NoSuchEntityException {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         return companyService.getCompanyStockData(user, displaySymbol, pageable);
     }
@@ -73,7 +74,7 @@ public class TrackingController {
     public List<DailyStockDataDto> getCompanyDailyStockData(@ModelAttribute("user") User user,
                                                             @RequestParam("displaySymbol") String displaySymbol,
                                                             @RequestParam("pageNumber") int pageNumber,
-                                                            @RequestParam("pageNumber") int pageSize) throws ApiException, NoSuchEntityException {
+                                                            @RequestParam("pageSize") int pageSize) throws ApiException, NoSuchEntityException {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         return companyService.getCompanyDailyStockData(user, displaySymbol, pageable);
     }
@@ -85,13 +86,14 @@ public class TrackingController {
 
     @ModelAttribute("user")
     public User getUser(HttpServletRequest request) throws ApiException {
-        System.out.println(request.getHeader(HEADER).replace(TOKEN_PREFIX, ""));
         String username = require(Algorithm.HMAC512(SECRET.getBytes()))
                 .build()
                 .verify(request.getHeader(HEADER).replace(TOKEN_PREFIX, ""))
                 .getSubject();
-
-        return userRepository.findByUsername(username)
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ApiException("Invalid token."));
+        if (!user.isAccountNonLocked())
+            throw new ApiException("Your account is locked");
+        return user;
     }
 }
