@@ -1,7 +1,7 @@
-package com.gmail.kirilllapitsky.finnhub.service;
+package com.gmail.kirilllapitsky.mailing.service;
 
-import com.gmail.kirilllapitsky.finnhub.entity.Subscription;
-import com.gmail.kirilllapitsky.finnhub.repository.SubscriptionRepository;
+import com.gmail.kirilllapitsky.mailing.entity.Subscription;
+import com.gmail.kirilllapitsky.mailing.repository.SubscriptionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -11,7 +11,8 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.gmail.kirilllapitsky.finnhub.utils.UsersMapper.subscriptionToUserEmailMapper;
+import static com.gmail.kirilllapitsky.mailing.util.UsersMapper.subscriptionToUserEmailMapper;
+
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
