@@ -1,6 +1,8 @@
-package com.gmail.kirilllapitsky.finnhub.service;
+package com.gmail.kirilllapitsky.mailing.service;
 
 
+import com.gmail.kirilllapitsky.mailing.entity.User;
+import com.gmail.kirilllapitsky.mailing.repository.UserRepository;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -19,10 +22,35 @@ import java.util.List;
 public class MailNotificationsSender {
     @Autowired
     private JavaMailSender mailSender;
+    @Autowired
+    private UserRepository userRepository;
     @Value("$spring.mail.username")
     private String projectMail;
 
     public void notifyUsers(List<String> emails, String message) {
+        emails.forEach(email -> {
+            MimeMessagePreparator mimeMessagePreparator = getMessage(email, message);
+            try {
+                mailSender.send(mimeMessagePreparator);
+            } catch (MailException e) {
+                log.error(e.getMessage());
+            }
+        });
+    }
+
+    public void sendNotification(String email, String message) {
+        MimeMessagePreparator mimeMessagePreparator = getMessage(email, message);
+        try {
+            mailSender.send(mimeMessagePreparator);
+        } catch (MailException e) {
+            log.error(e.getMessage());
+        }
+    }
+
+    public void mailing(String message) {
+        List<String> emails = userRepository.findAll().stream()
+                .map(User::getEmail)
+                .collect(Collectors.toList());
         emails.forEach(email -> {
             MimeMessagePreparator mimeMessagePreparator = getMessage(email, message);
             try {
