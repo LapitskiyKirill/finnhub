@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @Data
 @Entity
 @Builder
+@Deprecated
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "company_metrics")

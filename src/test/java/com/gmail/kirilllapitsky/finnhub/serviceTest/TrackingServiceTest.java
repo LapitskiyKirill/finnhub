@@ -10,6 +10,7 @@ import com.gmail.kirilllapitsky.finnhub.repository.UserRepository;
 import com.gmail.kirilllapitsky.finnhub.security.enumerable.Role;
 import com.gmail.kirilllapitsky.finnhub.service.TrackingService;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
@@ -27,6 +28,7 @@ import java.util.Optional;
 
 import static org.junit.Assert.*;
 
+@Ignore
 @SpringBootTest
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)

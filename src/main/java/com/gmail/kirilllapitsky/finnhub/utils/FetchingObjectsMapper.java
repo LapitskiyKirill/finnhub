@@ -6,6 +6,7 @@ import com.gmail.kirilllapitsky.finnhub.entity.CompanyMetrics;
 import com.gmail.kirilllapitsky.finnhub.entity.DailyStockData;
 import com.gmail.kirilllapitsky.finnhub.entity.StockData;
 
+@Deprecated
 public class FetchingObjectsMapper {
 
     public static Company companyMapper(FinnhubCompany finnhubCompany) {
