@@ -25,6 +25,10 @@ public class MicroserviceCompanyService {
     private final TrackingClient trackingClient;
     private final CompanyRepository companyRepository;
 
+    public void fetchAllCompaniesFromFetchingService() {
+        companyRepository.saveAll(trackingClient.getAllCompanies());
+    }
+
     public List<CompanyDto> getAllCompanies(Pageable pageable) {
         return companyRepository.findAll(pageable).getContent().stream()
                 .map(ServiceMapper::companyMapper)
