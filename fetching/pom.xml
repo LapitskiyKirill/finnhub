@@ -11,6 +11,9 @@
     </parent>
     <groupId>com.gmail.kirilllapitsky</groupId>
     <artifactId>fetching</artifactId>
+    <properties>
+        <java.version>11</java.version>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -46,5 +49,12 @@
             <scope>runtime</scope>
         </dependency>
     </dependencies>
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>
