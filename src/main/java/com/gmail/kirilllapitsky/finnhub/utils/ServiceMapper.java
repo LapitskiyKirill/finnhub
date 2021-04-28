@@ -9,7 +9,6 @@ import com.gmail.kirilllapitsky.finnhub.entity.CompanyMetrics;
 import com.gmail.kirilllapitsky.finnhub.entity.DailyStockData;
 import com.gmail.kirilllapitsky.finnhub.entity.StockData;
 
-@Deprecated
 public class ServiceMapper {
     public static CompanyDto companyMapper(Company company) {
         return CompanyDto.builder()

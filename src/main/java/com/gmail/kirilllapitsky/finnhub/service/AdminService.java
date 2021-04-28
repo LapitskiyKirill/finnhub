@@ -12,6 +12,7 @@ import com.gmail.kirilllapitsky.finnhub.repository.UserRepository;
 import com.gmail.kirilllapitsky.finnhub.security.enumerable.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,14 @@ public class AdminService {
     private final SubscriptionRepository subscriptionRepository;
     private final PasswordEncoder passwordEncoder;
     private final MailingClient mailingService;
+    @Value("${mailing.message.block}")
+    private String block;
+    @Value("${mailing.message.unblock}")
+    private String unblock;
+    @Value("${mailing.message.subscription.renew}")
+    private String renew;
+    @Value("${mailing.message.subscription.delete}")
+    private String delete;
 
     public void createAdminAccount(RegisterRequest request) throws ApiException {
         if (userRepository.findByUsername(request.getUsername()).isPresent())
@@ -51,14 +60,14 @@ public class AdminService {
         User user = findUserByUsername(username);
         user.setAccountNonLocked(false);
         userRepository.save(user);
-        mailingService.sendNotification(new Message("${mailing.message.block}", user.getEmail()));
+        mailingService.sendNotification(new Message(block, user.getEmail()));
     }
 
     public void unBlockUser(String username) throws NoSuchEntityException {
         User user = findUserByUsername(username);
         user.setAccountNonLocked(true);
         userRepository.save(user);
-        mailingService.sendNotification(new Message("${mailing.message.unblock}", user.getEmail()));
+        mailingService.sendNotification(new Message(unblock, user.getEmail()));
     }
 
     public void setSubscription(String username, Role role) throws NoSuchEntityException {
@@ -70,7 +79,7 @@ public class AdminService {
                 .shouldBeRenew(false)
                 .build();
         subscriptionRepository.save(subscription);
-        mailingService.sendNotification(new Message("${mailing.message.subscription.renew}", user.getEmail()));
+        mailingService.sendNotification(new Message(renew, user.getEmail()));
 
     }
 
@@ -82,7 +91,7 @@ public class AdminService {
         subscription.setEndDate(null);
         subscription.setRole(Role.GUEST);
         subscriptionRepository.save(subscription);
-        mailingService.sendNotification(new Message("${mailing.message.subscription.delete}", user.getEmail()));
+        mailingService.sendNotification(new Message(delete, user.getEmail()));
     }
 
     public void mailing(String message) {

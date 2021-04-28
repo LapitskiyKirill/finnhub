@@ -11,7 +11,8 @@ import com.gmail.kirilllapitsky.fetching.repository.CompanyRepository;
 import com.gmail.kirilllapitsky.fetching.repository.DailyStockDataRepository;
 import com.gmail.kirilllapitsky.fetching.repository.StockDataRepository;
 import com.gmail.kirilllapitsky.fetching.utils.FetchingObjectsMapper;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
 import static com.gmail.kirilllapitsky.fetching.utils.FetchingObjectsMapper.*;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class FetchingService {
     private final CompanyFeignClient companyFeignClient;
     private final CompanyRepository companyRepository;
@@ -43,7 +44,7 @@ public class FetchingService {
 
     public void refreshAllCompaniesInfo() {
         int page = 0;
-        int pageSize = 100;
+        int pageSize = 10;
         Pageable pageable;
         while (true) {
             pageable = PageRequest.of(page, pageSize);
@@ -65,7 +66,7 @@ public class FetchingService {
 
     public void fetchAllCompaniesMetrics() {
         int page = 0;
-        int pageSize = 100;
+        int pageSize = 10;
         Pageable pageable;
         while (true) {
             pageable = PageRequest.of(page, pageSize);
@@ -85,7 +86,7 @@ public class FetchingService {
     @Scheduled(cron = "0 0 0 * * 0", zone = "Europe/Moscow")
     public void refreshCompanyMetrics() {
         int page = 0;
-        int pageSize = 100;
+        int pageSize = 10;
         Pageable pageable;
         while (true) {
             pageable = PageRequest.of(page, pageSize);
@@ -109,7 +110,7 @@ public class FetchingService {
     @Scheduled(cron = "0 */10 * * * *", zone = "Europe/Moscow")
     public void fetchStockData() {
         int page = 0;
-        int pageSize = 100;
+        int pageSize = 10;
         Pageable pageable;
         while (true) {
             pageable = PageRequest.of(page, pageSize);
@@ -133,7 +134,7 @@ public class FetchingService {
     @Scheduled(cron = "0 0 0 * * *", zone = "Europe/Moscow")
     public void fetchDailyStockData() {
         int page = 0;
-        int pageSize = 100;
+        int pageSize = 10;
         Pageable pageable;
         while (true) {
             pageable = PageRequest.of(page, pageSize);

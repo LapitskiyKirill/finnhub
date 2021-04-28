@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "company")
+@Table(name = "finnhub_company")
 public class Company {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
