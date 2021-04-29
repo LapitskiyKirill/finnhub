@@ -1,11 +1,11 @@
 package com.gmail.kirilllapitsky.finnhub.controller;
 
 import com.gmail.kirilllapitsky.finnhub.dto.RegisterRequest;
-import com.gmail.kirilllapitsky.finnhub.entity.Message;
 import com.gmail.kirilllapitsky.finnhub.exception.ApiException;
 import com.gmail.kirilllapitsky.finnhub.exception.NoSuchEntityException;
 import com.gmail.kirilllapitsky.finnhub.security.enumerable.Role;
 import com.gmail.kirilllapitsky.finnhub.service.AdminService;
+import com.gmail.kirilllapitsky.finnhub.service.MicroserviceCompanyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +15,16 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class AdminController {
     private final AdminService adminService;
+    private final MicroserviceCompanyService microserviceCompanyService;
 
     @PostMapping("/mailing")
     public void mailing(@RequestParam("message") String message) {
         adminService.mailing(message);
+    }
+
+    @PostMapping("/fetchAllCompanies")
+    public void fetchAllCompaniesFromFetchingService() {
+        microserviceCompanyService.fetchAllCompaniesFromFetchingService();
     }
 
     @PostMapping("/blockUser")

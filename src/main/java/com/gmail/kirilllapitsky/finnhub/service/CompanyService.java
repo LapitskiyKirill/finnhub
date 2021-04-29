@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Deprecated
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CompanyService {
     private final CompanyRepository companyRepository;

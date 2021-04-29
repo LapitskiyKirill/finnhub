@@ -8,9 +8,10 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
 @Data
+@Entity
 @Builder
+@Deprecated
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "daily_stock_data")

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
+@Deprecated
 @FeignClient(name = "CompanyFeignClient", url = "https://finnhub.io")
 public interface CompanyFeignClient {
 

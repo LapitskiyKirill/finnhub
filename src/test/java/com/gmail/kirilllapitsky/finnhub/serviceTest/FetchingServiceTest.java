@@ -16,6 +16,7 @@ import com.gmail.kirilllapitsky.finnhub.repository.DailyStockDataRepository;
 import com.gmail.kirilllapitsky.finnhub.repository.StockDataRepository;
 import com.gmail.kirilllapitsky.finnhub.service.fetching.FetchingServiceImpl;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
@@ -35,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Ignore
 @SpringBootTest
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)

@@ -10,7 +10,7 @@ public enum Role {
     BEGINNER(Set.of(Permissions.TRACKING), 2),
     MIDDLE(Set.of(Permissions.TRACKING), 6),
     SENIOR(Set.of(Permissions.TRACKING), 10),
-    ADMIN(Set.of(Permissions.ADMINISTRATE), 0);
+    ADMIN(Set.of(Permissions.ADMINISTRATE, Permissions.TRACKING), 10);
 
     private final Set<SimpleGrantedAuthority> permissions;
 

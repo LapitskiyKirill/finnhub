@@ -10,6 +10,7 @@ import java.time.LocalDate;
 
 @Data
 @Builder
+@Deprecated
 @NoArgsConstructor
 @AllArgsConstructor
 public class FinnhubMetrics {

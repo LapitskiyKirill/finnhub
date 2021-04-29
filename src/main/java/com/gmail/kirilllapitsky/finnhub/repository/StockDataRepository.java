@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Deprecated
 @Repository
 public interface StockDataRepository extends JpaRepository<StockData, Long> {
     List<StockData> findAllByCompany(Company company, Pageable pageable);

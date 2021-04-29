@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
-
+@Deprecated
 @Repository
 public interface CompanyMetricsRepository extends JpaRepository<CompanyMetrics, Long> {
     Optional<CompanyMetrics> findByCompany(Company company);

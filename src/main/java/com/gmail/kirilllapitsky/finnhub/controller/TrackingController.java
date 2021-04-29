@@ -23,8 +23,9 @@ import java.util.List;
 import static com.auth0.jwt.JWT.require;
 import static com.gmail.kirilllapitsky.finnhub.constants.SecurityConstants.*;
 
+@Deprecated
 @RestController
-@RequestMapping("/api/tracking")
+@RequestMapping("/api/deprecated/tracking")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TrackingController {
     private final UserRepository userRepository;

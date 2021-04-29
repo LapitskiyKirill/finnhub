@@ -15,7 +15,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +23,7 @@ import java.util.stream.Collectors;
 import static com.gmail.kirilllapitsky.finnhub.utils.FetchingObjectsMapper.*;
 
 @Service
+@Deprecated
 @AllArgsConstructor
 public class FetchingServiceImpl implements FetchingService {
     private final CompanyFeignClient companyFeignClient;
@@ -85,7 +85,7 @@ public class FetchingServiceImpl implements FetchingService {
         }
     }
 
-    @Scheduled(cron = "0 0 0 * * 0", zone = "Europe/Moscow")
+    //@Scheduled(cron = "0 0 0 * * 0", zone = "Europe/Moscow")
     public void refreshCompanyMetrics() {
         int page = 0;
         int pageSize = 100;
@@ -109,7 +109,7 @@ public class FetchingServiceImpl implements FetchingService {
         }
     }
 
-    @Scheduled(cron = "0 */10 * * * *", zone = "Europe/Moscow")
+    //@Scheduled(cron = "0 */10 * * * *", zone = "Europe/Moscow")
     public void fetchStockData() {
         int page = 0;
         int pageSize = 100;
@@ -133,7 +133,7 @@ public class FetchingServiceImpl implements FetchingService {
         }
     }
 
-    @Scheduled(cron = "0 0 0 * * *", zone = "Europe/Moscow")
+    //@Scheduled(cron = "0 0 0 * * *", zone = "Europe/Moscow")
     public void fetchDailyStockData() {
         int page = 0;
         int pageSize = 100;
