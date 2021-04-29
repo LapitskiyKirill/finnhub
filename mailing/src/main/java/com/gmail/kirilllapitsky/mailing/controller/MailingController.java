@@ -4,10 +4,7 @@ import com.gmail.kirilllapitsky.mailing.entity.Message;
 import com.gmail.kirilllapitsky.mailing.service.MailNotificationsSender;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/mailing")
@@ -16,8 +13,8 @@ public class MailingController {
     private final MailNotificationsSender mailNotificationsSender;
 
     @PostMapping
-    public void mailing(@RequestBody Message message) {
-        mailNotificationsSender.mailing(message.getMessage());
+    public void mailing(@RequestBody String message) {
+        mailNotificationsSender.mailing(message);
     }
 
     @PostMapping("/sendNotification")
