@@ -26,7 +26,9 @@ public class MicroserviceCompanyService {
     private final CompanyRepository companyRepository;
 
     public void fetchAllCompaniesFromFetchingService() {
-        companyRepository.saveAll(trackingClient.getAllCompanies());
+        List<Company> companies = trackingClient.getAllCompanies();
+        System.out.println(companies);
+        companyRepository.saveAll(companies);
     }
 
     public List<CompanyDto> getAllCompanies(Pageable pageable) {

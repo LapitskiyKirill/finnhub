@@ -28,7 +28,9 @@ public class CompanyService {
     private final StockDataRepository stockDataRepository;
 
     public List<Company> getAllCompanies() {
-        return companyRepository.findAll();
+        List<Company> companies = companyRepository.findAll();
+        System.out.println(companies);
+        return companies;
     }
 
     public CompanyMetricsDto getCompanyMetrics(String displaySymbol) throws Exception {
