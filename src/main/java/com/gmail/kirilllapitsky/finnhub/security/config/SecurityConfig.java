@@ -45,7 +45,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/paypal/payment/complete").permitAll()
                 .antMatchers("/api/tracking/getAllCompanies").hasAnyAuthority("VIEWING", "TRACKING")
                 .antMatchers("/api/tracking/**").hasAuthority("TRACKING")
-                .antMatchers("/api/admin/**").hasAuthority("ADMINISTRATE");
+                .antMatchers("/api/admin/**").hasAuthority("ADMINISTRATE")
+                .antMatchers("/api/mailingTest/**").hasAuthority("ADMINISTRATE")
+                .antMatchers("/api/fetchingTest/**").hasAuthority("ADMINISTRATE");
     }
 
     @Override

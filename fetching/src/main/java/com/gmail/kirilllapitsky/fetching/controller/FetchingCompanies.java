@@ -29,6 +29,11 @@ public class FetchingCompanies {
         fetchingService.fetchAllCompanies();
     }
 
+    @PostMapping("/fetchAllCompaniesMetrics")
+    public void fetchAllCompaniesMetrics() {
+        fetchingService.fetchAllCompaniesMetrics();
+    }
+
     @GetMapping("/refreshAllCompaniesInfo")
     public void refreshAllCompaniesInfo() {
         fetchingService.refreshAllCompaniesInfo();

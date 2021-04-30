@@ -8,6 +8,8 @@ import com.gmail.kirilllapitsky.finnhub.service.AdminService;
 import com.gmail.kirilllapitsky.finnhub.service.MicroserviceCompanyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,38 +20,44 @@ public class AdminController {
     private final MicroserviceCompanyService microserviceCompanyService;
 
     @PostMapping("/mailing")
-    public void mailing(@RequestParam("message") String message) {
+    public ResponseEntity<String> mailing(@RequestParam("message") String message) {
         adminService.mailing(message);
+        return new ResponseEntity<>("Successfully mailing.", HttpStatus.OK);
     }
 
     @PostMapping("/fetchAllCompanies")
-    public void fetchAllCompaniesFromFetchingService() {
+    public ResponseEntity<String> fetchAllCompaniesFromFetchingService() {
         microserviceCompanyService.fetchAllCompaniesFromFetchingService();
+        return new ResponseEntity<>("Successfully fetched companies.", HttpStatus.OK);
     }
 
     @PostMapping("/blockUser")
-    public void blockUser(@RequestParam("username") String username) throws NoSuchEntityException {
+    public ResponseEntity<String> blockUser(@RequestParam("username") String username) throws NoSuchEntityException {
         adminService.blockUser(username);
+        return new ResponseEntity<>("User successfully blocked.", HttpStatus.OK);
     }
 
     @PostMapping("/unBlockUser")
-    public void unBlockUser(@RequestParam("username") String username) throws NoSuchEntityException {
+    public ResponseEntity<String> unBlockUser(@RequestParam("username") String username) throws NoSuchEntityException {
         adminService.unBlockUser(username);
+        return new ResponseEntity<>("User successfully unblocked.", HttpStatus.OK);
     }
 
     @PostMapping("/createAdminAccount")
-    public void createAdminAccount(@RequestBody RegisterRequest registerRequest) throws ApiException {
+    public ResponseEntity<String> createAdminAccount(@RequestBody RegisterRequest registerRequest) throws ApiException {
         adminService.createAdminAccount(registerRequest);
+        return new ResponseEntity<>("Admin account successfully created.", HttpStatus.OK);
     }
 
     @PostMapping("/setSubscription")
-    public void setSubscription(@RequestParam("username") String username, @RequestParam("Role") Role role) throws NoSuchEntityException {
+    public ResponseEntity<String> setSubscription(@RequestParam("username") String username, @RequestParam("Role") Role role) throws NoSuchEntityException {
         adminService.setSubscription(username, role);
+        return new ResponseEntity<>("User subscription successfully set.", HttpStatus.OK);
     }
 
     @PostMapping("/deleteSubscription")
-    public void deleteSubscription(@RequestParam("username") String username) throws NoSuchEntityException {
+    public ResponseEntity<String> deleteSubscription(@RequestParam("username") String username) throws NoSuchEntityException {
         adminService.deleteSubscription(username);
+        return new ResponseEntity<>("User subscription successfully deleted.", HttpStatus.OK);
     }
-
 }

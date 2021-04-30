@@ -13,7 +13,6 @@ import java.util.List;
 
 import static com.gmail.kirilllapitsky.mailing.util.UsersMapper.subscriptionToUserEmailMapper;
 
-
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class SubscriptionNotificationService {

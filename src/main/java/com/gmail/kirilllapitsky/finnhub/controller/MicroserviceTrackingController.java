@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,15 +39,18 @@ public class MicroserviceTrackingController {
     }
 
     @PostMapping("/track")
-    public void track(@ModelAttribute("user") User user,
-                      @RequestParam("displaySymbol") String displaySymbol) throws NoSuchEntityException, ApiException {
+    public ResponseEntity<String> track(@ModelAttribute("user") User user,
+                                        @RequestParam("displaySymbol") String displaySymbol) throws NoSuchEntityException, ApiException {
         trackingService.track(user, displaySymbol);
+        return new ResponseEntity<>(String.format("Now you tracking company with ticker %s.", displaySymbol), HttpStatus.OK);
+
     }
 
     @PostMapping("/unTrack")
-    public void unTrack(@ModelAttribute("user") User user,
-                        @RequestParam("displaySymbol") String displaySymbol) throws NoSuchEntityException {
+    public ResponseEntity<String> unTrack(@ModelAttribute("user") User user,
+                                          @RequestParam("displaySymbol") String displaySymbol) throws NoSuchEntityException {
         trackingService.unTrack(user, displaySymbol);
+        return new ResponseEntity<>(String.format("Now you do not tracking company with ticker %s.", displaySymbol), HttpStatus.OK);
     }
 
     @GetMapping("/getAllCompanies")
