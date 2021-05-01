@@ -5,9 +5,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @FeignClient(name = "MailingTestClient", url = "${mailing.path}")
 public interface MailingTestClient {
-    @PostMapping(value = "/verify")
+    @PostMapping(value = "/testing/verify")
     void verify();
 
-    @PostMapping(value = "/notify")
+    @PostMapping(value = "/testing/notify")
     void notifyUsers();
 }

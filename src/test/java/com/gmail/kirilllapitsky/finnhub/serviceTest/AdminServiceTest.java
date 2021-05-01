@@ -118,6 +118,7 @@ public class AdminServiceTest {
     public void shouldSetSubscription() throws NoSuchEntityException {
         subscription.setUser(user);
         subscription.setRole(Role.BEGINNER);
+        Mockito.when(subscriptionRepository.findById(user.getId())).thenReturn(Optional.of(subscription));
         Mockito.when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
 
         adminService.setSubscription(user.getUsername(), Role.BEGINNER);

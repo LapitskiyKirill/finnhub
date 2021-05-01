@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class AdminService {
@@ -72,12 +74,11 @@ public class AdminService {
 
     public void setSubscription(String username, Role role) throws NoSuchEntityException {
         User user = findUserByUsername(username);
-        Subscription subscription = Subscription
-                .builder()
-                .user(user)
-                .role(role)
-                .shouldBeRenew(false)
-                .build();
+        Subscription subscription = subscriptionRepository.findById(user.getId()).get();
+        subscription.setRole(role);
+        subscription.setShouldBeRenew(false);
+        subscription.setRenewLevel(null);
+        subscription.setEndDate(LocalDate.now().plusDays(31));
         subscriptionRepository.save(subscription);
         mailingService.sendNotification(new Message(renew, user.getEmail()));
 
